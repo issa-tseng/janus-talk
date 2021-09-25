@@ -1,7 +1,7 @@
 $color-accent: #0b9a9a
 $color-accent2: #1c0110
 $color-bg: #f7f7f7
-$color-text: #333
+$color-text: #eee
 $color-success: #4c4
 $color-error: #c44
 $color-warning: #fadd00
@@ -111,23 +111,29 @@ $ease-extreme-out: cubic-bezier(.05, .9, 0, 1)
 
 
 .CodeMirror.cm-s-default
-  .CodeMirror-activeline-background
+  color: #888
+
+  //.CodeMirror-activeline-background
     background: #f7f7f7
+  .CodeMirror-cursor
+    border-left-color: #fff
+  .cm-atom
+    color: #ffb8b8
   .cm-def
-    color: #007ec7
+    color: #dfad00
   .cm-keyword
-    color: #037d7d
+    color: #42f1bd
   .CodeMirror-nonmatchingbracket
     background: #ecc
     color: inherit
-  .cm-property
-    color: #666
-  .cm-string, .cm-string-2
-    color: #0c820a
+  .cm-property, .cm-variable-2
+    color: #f4f4f4
+  .cm-string, .cm-string-2, .cm-number
+    color: #70b3d9
   .cm-trailingspace
-    background: #e3e3e3
+    background: #3c0021
   .cm-variable
-    color: #7c00bb
+    color: #ed5328
 
   &.CodeMirror-focused
     .CodeMirror-matchingbracket
@@ -254,6 +260,7 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
       font-family: $font-monospace
       margin-bottom: 4em
       margin-left: 1.45em
+      margin-top: 1em
       text-align: center
       text-transform: lowercase
       transform: rotate(90deg)
@@ -278,15 +285,9 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
       cursor: auto
 
   .statement
-    border-bottom: 1px dotted #ddd
+    border-bottom: 1px dotted #3b3b3b
     &:last-child
       border-bottom: none
-
-    counter-increment: line-number
-    &:first-child
-      counter-reset: line-number
-    .statement-placeholder:after
-      content: counter(line-number)
 
     .statement-result
       .janus-inspect-reference, .janus-inspect-pin
@@ -339,7 +340,6 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
   $placeholder-color: #888
   min-height: 4.2em
   padding: 0.8em 1.3em
-    left: 0.8rem + $repl-left-gutter
   position: relative
 
   .CodeMirror
@@ -351,14 +351,8 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
     .CodeMirror-scroll
       height: auto
 
-  .statement-left
-    bottom: 0
-    left: 0
+  .statement-header
     padding: 0.8em 0
-    position: absolute
-    text-align: right
-    top: 0
-    width: calc(#{$repl-left-gutter} - 1em)
 
   .statement-status
     @include fill
@@ -421,21 +415,28 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
       transform: translateX(0)
 
   .statement-placeholder
-    // TODO: sort of a mess but i just want this to work.
-    color: $placeholder-color
+    color: #555
     font-family: $font-monospace
     font-size: 1.1em
     padding: 0.5em 0
     pointer-events: none
     position: absolute
-    width: calc(100% - 1.3em)
+
     &:after
-      padding-left: 0.3em
+      content: '>'
+
+  &.named .statement-placeholder
+    color: #fff
+    transition: 0.6s color
+
+    &:after
+      color: #aaa
+      content: '='
 
   .statement-name
     font-family: $font-monospace
     font-size: 1.4em
-    padding-top: 0.15em
+    padding-top: 0.2em
     width: 100%
 
     input
@@ -443,31 +444,30 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
       color: $color-text
       font-family: $font-monospace
       margin-right: 0.4em
-      text-align: right
       width: calc(100% - 2.5em)
 
-    &:after
-      color: $placeholder-color
-      content: '>'
-
   .statement-toolbox
-    padding: 0.8em
-      right: 0
+    padding: 2.4em
+      bottom: 0
+    position: absolute
+    right: 0
+    top: 0
 
     button
       @include no-appearance
+      color: #ccc
       margin-left: 0.5em
       opacity: 0
       transition: 0.4s opacity
       &:before
         @include icon($icon-window)
       &.checked
-        color: $color-accent2
+        color: $color-accent
         opacity: 1
 
     .statement-insert
-      left: 0
       position: absolute
+      right: 1em
       top: -0.5em
 
     .statement-insert:before
@@ -481,19 +481,12 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
 
   &:hover .statement-toolbox button
     opacity: 0.13
-  .statement-left:hover .statement-toolbox button
+  .statement-header:hover .statement-toolbox button
     opacity: 1
     transition-duration: 0
 
   &:first-child .statement-insert
     display: none
-
-  &.named
-    .statement-placeholder
-      display: none
-    .statement-name:after
-      color: $color-text
-      content: '='
 
   .statement-result
     position: relative

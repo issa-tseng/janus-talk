@@ -42,7 +42,7 @@ class StatementVM extends Model.build(
 
 class StatementView extends DomView.build(StatementVM, $(`
   <div class="statement">
-    <div class="statement-left">
+    <div class="statement-header">
       <div class="statement-status">
         <div>
           <span class="statement-stale" title="This result may be outdated"/>
@@ -50,7 +50,7 @@ class StatementView extends DomView.build(StatementVM, $(`
           <button class="statement-rerun-all" title="Rerun with all following statements (double-tap Enter in the future to automatically rerun)"/>
         </div>
       </div>
-      <div class="statement-placeholder">line</div>
+      <div class="statement-placeholder"/>
       <div class="statement-name"/>
       <div class="statement-toolbox">
         <button class="statement-insert" title="Add Statement"/>
@@ -69,6 +69,7 @@ class StatementView extends DomView.build(StatementVM, $(`
     .classed('has-result', from('result').map(exists))
     .classed('is-stale', from.vm('stale'))
     .classGroup('status-', from.vm('status')),
+  find('.statement-placeholder').text(from('name').map(s => blank(s) ? 'line' : s)),
   find('.statement-name').render(from.attribute('name')),
 
   template('toolbox',
@@ -114,7 +115,7 @@ class StatementView extends DomView.build(StatementVM, $(`
 // TODO: repetitive with above; sort of awaiting janus#138
 const ReferenceView = DomView.build(StatementVM, $(`
   <div class="statement reference">
-    <div class="statement-left">
+    <div class="statement-header">
       <div class="statement-placeholder">value</div>
       <div class="statement-name"/>
       <div class="statement-toolbox">
