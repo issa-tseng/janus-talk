@@ -1,4 +1,5 @@
 window.tap = (x) => { console.log(x); return x; };
+window.scrollTo(0, 0);
 
 require('./util');
 const $ = window.$ = require('jquery');
@@ -26,6 +27,7 @@ stdlib.view($).registerWith(deck.views);
 inspect.view($).registerWith(deck.views);
 require('./extern/view/confirm').registerWith(deck.views);
 require('./extern/view/editor').registerWith(deck.views);
+require('./extern/view/exception').registerWith(deck.views);
 require('./extern/view/flyout').registerWith(deck.views);
 require('./extern/view/placeholder').registerWith(deck.views);
 require('./extern/view/repl').registerWith(deck.views);
@@ -39,4 +41,7 @@ $('main').append(deckView.artifact());
 deckView.wireEvents();
 
 deck.get('overview').react(false, active => { $('html').toggleClass('overview', !!active) });
+
+// bad hack to fix a safari bug
+$(() => { $('html, body').scrollLeft(0); });
 

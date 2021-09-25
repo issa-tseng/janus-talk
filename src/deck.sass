@@ -46,6 +46,45 @@ html, body
 #content
   display: none
 
+.flyout
+  .janus-inspect-panel
+    min-width: 30em
+
+    &.janus-inspect-varying
+      min-width: 40em
+
+#repl
+  bottom: 0
+  //overflow: hidden
+  position: absolute
+  top: 0
+  right: 0
+  width: 31vw
+
+  .repl
+    background-color: #200112
+    height: 100vh
+    position: absolute
+    right: -31vw
+    top: 0
+    transition: 0.7s transform $ease-extreme-out
+    width: 31vw
+
+    .overview &
+      transform: translate(-31vw, 0)
+
+#xray
+  left: 0
+  position: absolute
+  top: 0
+  z-index: $z-xray
+
+#junk
+  left: 0
+  position: absolute
+  top: 0
+  z-index: $z-junk
+
 
 ////////////////////////////////////////////////////////////
 // BASIC
@@ -93,4 +132,5 @@ section
 // LAST IMPORTS
 
 @import 'styles/slides'
+@import 'styles/extern'
 

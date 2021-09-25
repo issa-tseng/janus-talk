@@ -5,6 +5,7 @@
   "dependencies": {
     "cherow": "~1",
     "codemirror": "^5.39.2",
+    "error-stack-parser": "~2",
     "janus": "~0.5",
     "janus-inspect": "~0.5",
     "janus-stdlib": "~0.5",

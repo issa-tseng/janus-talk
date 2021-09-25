@@ -169,7 +169,6 @@ const PinView = DomView.build($(`
 class ReplView extends DomView.build($(`
   <div class="repl">
     <div class="repl-chrome">
-      <button class="repl-close" title="Close Console"/>
       <h2>Console</h2>
 
       <div class="repl-toolbar">
@@ -190,7 +189,6 @@ class ReplView extends DomView.build($(`
   </div>
 `), template(
   find('.repl').classed('autopaneled', from('autopanel')),
-  find('.repl-close').on('click', (e, s, view) => { view.options.app.hideRepl(); }),
   find('.repl-xray').on('click', (e, repl, view) => {
     view.options.app.xray((result) => {
       repl.reference(result);

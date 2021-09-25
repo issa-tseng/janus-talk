@@ -1,0 +1,1389 @@
+$color-accent: #0b9a9a
+$color-accent2: #1c0110
+$color-bg: #f7f7f7
+$color-text: #333
+$color-success: #4c4
+$color-error: #c44
+$color-warning: #fadd00
+$color-highlight: $color-warning
+$color-xray: #444
+$color-xray-selected: #2364cb
+
+$repl-left-gutter: 12rem
+
+$font-monospace: menlo, monaco, inconsolata, consolas, monospace
+
+$z-repl: 150
+$z-sheets: 199
+$z-flyout: 200
+$z-junk: 400
+$z-tooltip: 500
+$z-skiplinks: 501
+$z-xray: 1000
+$z-xray-next: $z-xray + 1
+$z-xray-selected: $z-xray + 2
+$z-xray-stack: $z-xray + 3
+
+$icon-add-circle: '\e90e'
+$icon-add: '\e910'
+$icon-arrow-right: '\e900'
+$icon-bound: '\e912'
+$icon-check: '\e913'
+$icon-chevron-down: '\e90a'
+$icon-chevron-right: '\e90b'
+$icon-delete: '\e901'
+$icon-clock: '\e918'
+$icon-close: '\e902'
+$icon-close-small: '\e90c'
+$icon-close-circle: '\e903'
+$icon-console-add: '\e90d'
+$icon-eye: '\e917'
+$icon-ffwd: '\e905'
+$icon-inspect: '\e919'
+$icon-load: '\e916'
+$icon-pencil: '\e904'
+$icon-pin: '\e906'
+$icon-play: '\e907'
+$icon-revert: '\e908'
+$icon-target: '\e914'
+$icon-swap: '\e911'
+$icon-window: '\e909'
+$icon-window-up: '\e90f'
+
+$subtle-shadow: 0 0.3em 0.5em rgba(0, 0, 0, 0.12)
+
+$ease-extreme-out: cubic-bezier(.05, .9, 0, 1)
+
+
+////////////////////////////////////////////////////////////////////////////////
+// UTIL
+
+@mixin fill($buffer: 0)
+  bottom: $buffer
+  left: $buffer
+  position: absolute
+  right: $buffer
+  top: $buffer
+
+@mixin reify
+  content: ''
+  display: block
+
+
+////////////////////////////////////////////////////////////////////////////////
+// COMMON
+
+@mixin custom-scrollbar($color-thumb: $color-accent, $color-gutter: rgba(0, 0, 10, 0.8))
+  &::-webkit-scrollbar
+    background: $color-gutter
+    width: 0.9em
+
+  &::-webkit-scrollbar-thumb
+    background: $color-thumb
+
+@mixin icon($which: null)
+  @if $which
+    content: $which
+  font-family: 'icons' !important
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  font-style: normal
+  font-variant: normal
+  font-weight: normal
+  line-height: 1
+  speak: none
+  text-transform: none
+
+@mixin no-appearance
+  background: none
+  border: none
+  margin: 0
+  outline: none
+  padding: 0
+
+@font-face
+  font-family: 'icons';
+  src: url('/assets/icons.eot?g')
+  src: url('/assets/icons.eot?g#iefix') format('embedded-opentype'), url('/assets/icons.ttf?g') format('truetype'), url('/assets/icons.woff?g') format('woff'), url('/assets/icons.svg?g#icomoon') format('svg')
+  font-weight: normal
+  font-style: normal
+
+
+
+.CodeMirror.cm-s-default
+  .CodeMirror-activeline-background
+    background: #f7f7f7
+  .cm-def
+    color: #007ec7
+  .cm-keyword
+    color: #037d7d
+  .CodeMirror-nonmatchingbracket
+    background: #ecc
+    color: inherit
+  .cm-property
+    color: #666
+  .cm-string, .cm-string-2
+    color: #0c820a
+  .cm-trailingspace
+    background: #e3e3e3
+  .cm-variable
+    color: #7c00bb
+
+  &.CodeMirror-focused
+    .CodeMirror-matchingbracket
+      background: #d7d7d7
+      color: inherit
+
+.exception
+  animation-duration: 1s
+  animation-timing-function: $ease-extreme-out
+  animation-iteration-count: 1
+  background-color: $color-error
+  color: #fff
+  padding: 1em
+  position: relative
+
+  .exception-message
+    font-family: $font-monospace
+    font-size: 1.2em
+
+  .exception-stack
+    .stack-line ~ .stack-line
+      display: none
+
+    a
+      color: #fff
+      cursor: text
+      text-decoration: none
+      &.navigable
+        cursor: pointer
+        text-decoration: underline
+
+  .exception-expando
+    bottom: 1em
+    position: absolute
+    right: 1em
+
+    button
+      @include no-appearance
+      padding: 0.2em
+
+      &:before
+        $size: 7px
+        @include reify
+        border-right: 2px solid #fff
+        border-bottom: 2px solid #fff
+        cursor: pointer
+        height: $size
+        transform: rotate(45deg)
+        transition: 1s transform $ease-extreme-out
+        width: $size
+
+      &.checked:before
+        transform: rotate(-135deg)
+
+  &.exception-name-SyntaxError
+    .exception-stack, .exception-expando
+      display: none
+
+  &.has-expanded 
+    animation-name: contract-margin
+
+  &.expanded
+    animation-name: expand-margin
+
+    .exception-stack .stack-line ~ .stack-line
+      display: block
+
+.stack-line
+  .stack-line-context.no-context
+    opacity: 0.3
+
+////////////////////////////////////////
+// COMPONENTS: repl
+
+$repl-chrome-padding: 1em
+$repl-chrome-width: 2.4em
+$repl-chrome-outer-width: (2 * $repl-chrome-padding) + $repl-chrome-width
+$repl-chrome-color-fg: #666
+$repl-chrome-color-bg: #1c0110
+$pin-color-bg: #ddd
+$pin-chrome-padding: 0.4em
+$pin-chrome-width: 1.6em
+$pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
+
+.repl
+
+  .repl-chrome
+    background: $repl-chrome-color-bg
+    bottom: 0
+    left: 0
+    padding: $repl-chrome-padding
+    position: absolute
+    top: 0
+    width: $repl-chrome-width
+
+    button
+      @include no-appearance
+      color: $repl-chrome-color-fg
+      margin-bottom: 1em
+      padding: 0.1em
+      &:before
+        @include icon
+        font-size: 2em
+
+      &.repl-close:before
+        content: $icon-close-circle
+      &.repl-xray:before
+        content: $icon-target
+      &.repl-clear:before
+        content: $icon-close
+    .repl-autopanel button
+      &:before
+        content: $icon-window
+      &.checked
+        color: $color-accent2
+
+    hr
+      border: none
+      padding-bottom: 1em
+
+    h2
+      color: $repl-chrome-color-fg
+      cursor: default
+      font-family: $font-monospace
+      margin-bottom: 4em
+      margin-left: 1.45em
+      text-align: center
+      text-transform: lowercase
+      transform: rotate(90deg)
+      transform-origin: left top
+      white-space: nowrap
+
+    .repl-toolbar
+      padding-top: 2em
+
+  .repl-main
+    @include custom-scrollbar(#777, #ccc)
+    bottom: 0
+    cursor: text
+    left: $repl-chrome-outer-width
+    overflow-x: auto
+    overflow-y: auto
+    position: absolute
+    right: 0
+    top: 0
+
+    .janus-inspect-panel
+      cursor: auto
+
+  .statement
+    border-bottom: 1px dotted #ddd
+    &:last-child
+      border-bottom: none
+
+    counter-increment: line-number
+    &:first-child
+      counter-reset: line-number
+    .statement-placeholder:after
+      content: counter(line-number)
+
+    .statement-result
+      .janus-inspect-reference, .janus-inspect-pin
+        display: none
+
+  &.autopaneled .statement-panel
+    display: none
+
+  .repl-pins
+    @include fill
+    background-color: $pin-color-bg
+    border-left: 1px solid #c4c4c4
+    display: none
+    left: auto
+
+    .repl-chrome
+      border-right: 1px dotted #e6e6e6
+
+      button:before
+        content: $icon-close
+
+    .repl-pins-list
+      margin-left: $repl-chrome-outer-width
+      max-height: 100%
+      overflow-y: auto
+
+      .pin
+        border-top: 1px dotted #c4c4c4
+        &:first-child
+          border-top: none
+
+    .janus-inspect-panel .panel-title
+      .janus-inspect-reference
+        right: 0.6em
+      .janus-inspect-pin
+        display: none
+
+  &.has-pins
+    $pins-width: 45em
+
+    .repl-main
+      right: $pins-width
+
+    .repl-pins
+      box-shadow: #{$repl-chrome-outer-width + $pin-chrome-outer-width} 0 0 $repl-chrome-color-bg inset
+      display: block
+      width: $pins-width
+
+.statement
+  $placeholder-color: #888
+  min-height: 4.2em
+  padding: 0.8em 1.3em
+    left: 0.8rem + $repl-left-gutter
+  position: relative
+
+  .CodeMirror
+    background: transparent
+    font-family: $font-monospace
+    font-size: 1.2em
+    height: auto
+
+    .CodeMirror-scroll
+      height: auto
+
+  .statement-left
+    bottom: 0
+    left: 0
+    padding: 0.8em 0
+    position: absolute
+    text-align: right
+    top: 0
+    width: calc(#{$repl-left-gutter} - 1em)
+
+  .statement-status
+    @include fill
+    overflow: hidden
+    width: 2em
+
+    div
+      @include fill
+      background: #eee
+      left: 0
+      padding-top: 0.5em
+      right: auto
+      transform: translateX(-2em)
+      transition: 0.3s transform $ease-extreme-out
+      width: 2em
+
+    button
+      @include no-appearance
+    span, button
+      color: #444
+      cursor: default
+      display: none
+      margin: 0.4em 0.55em
+      &:before
+        @include icon
+
+    .statement-stale:before
+      content: $icon-clock
+
+    button
+      &:before
+        @include icon
+      &.statement-rerun:before
+        content: $icon-play
+      &.statement-rerun-all:before
+        content: $icon-ffwd
+
+  &.is-stale .statement-status div
+    background: $color-warning
+    transform: translateX(-2em) translateX(2px)
+  &.status-none .statement-status div
+    background: #262626
+    transform: translateX(-2em) translateX(2px)
+  &.status-fail .statement-status div
+    background: $color-error
+    transform: translateX(-2em) translateX(2px)
+
+    span, button
+      color: #fff
+
+  &.is-stale
+    .statement-status
+      span, button
+        display: block
+
+    .statement-left:hover .statement-status div
+      transform: translateX(-2em) translateX(4px)
+
+    .statement-left .statement-status:hover div
+      transform: translateX(0)
+
+  .statement-placeholder
+    // TODO: sort of a mess but i just want this to work.
+    color: $placeholder-color
+    font-family: $font-monospace
+    font-size: 1.1em
+    padding: 0.5em 0
+    pointer-events: none
+    position: absolute
+    width: calc(100% - 1.3em)
+    &:after
+      padding-left: 0.3em
+
+  .statement-name
+    font-family: $font-monospace
+    font-size: 1.4em
+    padding-top: 0.15em
+    width: 100%
+
+    input
+      @include no-appearance
+      color: $color-text
+      font-family: $font-monospace
+      margin-right: 0.4em
+      text-align: right
+      width: calc(100% - 2.5em)
+
+    &:after
+      color: $placeholder-color
+      content: '>'
+
+  .statement-toolbox
+    padding: 0.8em
+      right: 0
+
+    button
+      @include no-appearance
+      margin-left: 0.5em
+      opacity: 0
+      transition: 0.4s opacity
+      &:before
+        @include icon($icon-window)
+      &.checked
+        color: $color-accent2
+        opacity: 1
+
+    .statement-insert
+      left: 0
+      position: absolute
+      top: -0.5em
+
+    .statement-insert:before
+      content: $icon-add
+    .statement-remove:before
+      content: $icon-close
+    .statement-pin:before
+      content: $icon-pin
+    .statement-panel button:before
+      content: $icon-window
+
+  &:hover .statement-toolbox button
+    opacity: 0.13
+  .statement-left:hover .statement-toolbox button
+    opacity: 1
+    transition-duration: 0
+
+  &:first-child .statement-insert
+    display: none
+
+  &.named
+    .statement-placeholder
+      display: none
+    .statement-name:after
+      color: $color-text
+      content: '='
+
+  .statement-result
+    position: relative
+
+    .janus-literal
+      font-size: 1.2rem
+
+    .entity-title, .entity-content:before, .entity-content:after
+      font-family: $font-monospace
+      font-size: 1.2rem
+
+    .entity-content .janus-literal,
+    > .eval-success > .janus-list > .janus-literal
+      font-family: $font-monospace
+
+    .janus-inspect-panel
+      clear: left
+
+  &.has-result .statement-result
+    padding-top: 0.6em
+  &.reference .statement-result
+    padding-top: 0.45em
+
+.pin
+  overflow: hidden
+  position: relative
+
+  .pin-chrome
+    @include fill
+    padding: 1em $pin-chrome-padding
+    right: auto
+    width: $pin-chrome-width
+
+    button
+      @include no-appearance
+      &:before
+        @include icon
+        color: $repl-chrome-color-fg
+        font-size: 1.6em
+
+    .pin-remove:before
+      content: $icon-close-small
+
+    .pin-expand button
+      &:before
+        content: $icon-chevron-right
+      &.checked:before
+        content: $icon-chevron-down
+
+  .pin-contents
+    animation-duration: 1s
+    animation-name: contract-margin
+    animation-iteration-count: 1
+    animation-timing-function: $ease-extreme-out
+    margin-left: $pin-chrome-outer-width
+    max-height: 3.6em
+    padding: 1em
+
+  &.expanded .pin-contents
+    animation-name: expand-margin
+    max-height: none
+
+  &:after
+    @include reify
+    @include fill
+    background: rgba(0, 0, 0, 0.1)
+    height: 0.2em
+    top: auto
+  &.expanded:after
+    display: none
+
+  .statement
+    padding: 0
+    .statement-placeholder, .statement-name, .statement-toolbox
+      display: none
+
+.valuator
+  box-shadow: 12em 0 #eee inset
+
+  .valuator-xray
+    @include no-appearance
+    color: #fff
+    position: absolute
+    right: 2.5em
+    top: 0.75em
+    &:before
+      @include icon($icon-target)
+      font-size: 1.1em
+
+  .valuator-statements
+    max-height: 80vh
+    overflow-y: auto
+
+  .statement-placeholder, .statement-pin
+    display: none
+
+  .valuator-line
+    border-bottom: 1px dotted #ddd
+    position: relative
+
+    .valuator-statement
+      margin-right: 2em
+
+    .code-editor
+      min-height: 2.5em // TODO: not sure why this is necessary.
+
+    &:last-child
+      border-bottom: none
+
+  .valuator-accept
+    @include no-appearance
+    @include fill
+    background: #3dafaf
+    border-left: 1px dotted #ddd
+    left: auto
+    width: 2em
+
+    &.disabled
+      background: transparent
+
+    &:before
+      @include icon($icon-chevron-right)
+      bottom: 0.3em
+      color: #fff
+      font-size: 1.5em
+      left: 0.2em
+      position: absolute
+    &.disabled:before
+      color: #ccc
+
+    &:hover
+      background: $color-accent2
+    &.disabled:hover
+      background: transparent
+
+.valuator-quick
+  background-color: #e4e4e4
+  border-top: 1px solid $color-accent
+  padding-right: 4.2em
+  width: 20vw
+
+  // TODO: loosely tied to flyout close btn
+  .quick-expand
+    @include no-appearance
+    position: absolute
+    right: 2.4em
+    top: 0.6em
+    &:before
+      @include icon($icon-window-up)
+      font-size: 1.2em
+
+  .statement
+    min-height: 0
+    padding: 0.5em
+    .CodeMirror
+      background-color: #fff
+
+  .statement-placeholder, .statement-name, .statement-toolbox
+    display: none
+
+
+.xray
+  pointer-events: none
+
+  .xray-chrome
+    @include fill(4px)
+    border: 4px solid $color-xray
+    box-shadow: 0 0 0 1em transparentize($color-xray, 0.2)
+    position: fixed
+
+    label
+      background: $color-xray
+      color: #fff
+      font-size: 2em
+      left: 0
+      padding: 0.4em 1em
+      position: absolute
+      top: 0
+
+  .xray-stack
+    bottom: 5px
+    left: 8px
+    position: fixed
+    z-index: $z-xray-stack
+
+@mixin xray-box($color, $width: 2px)
+  box-shadow: 0 0 0 $width $color inset
+
+.xray-entry .xray-entity
+  background-color: #444
+  color: #fff
+  font-family: $font-monospace
+  padding: 0.3em 0.5em
+  white-space: nowrap
+
+.xray-entry.delta0 .xray-entity
+  .select-view &.xray-view,
+  .select-subject &.xray-subject
+    background-color: $color-xray-selected
+
+.xray-stack .xray-entry 
+  min-height: 1.7em
+  white-space: nowrap
+
+  .xray-entity
+    max-width: 30vw
+    text-overflow: ellipsis
+
+    .model-pairs
+      color: #ccc
+
+  .xray-hint
+    background: rgba(0, 0, 0, 0.7)
+    color: #fff
+    display: none
+    font-family: $font-monospace
+    margin-left: 0.8em
+    padding: 0.2em
+
+    .key
+      background-color: #ccc
+      color: #444
+      padding: 0 0.2em
+
+  .xray-view
+    background: #666
+  .xray-subject
+    background: #888
+
+  &.delta1 .hint-prev
+    display: inline
+  &.delta-1 .hint-next
+    display: inline
+
+  &.delta0
+    .hint-sel
+      display: inline
+      background: $color-accent2
+    .xray-view, .xray-subject
+      background: #444
+
+.xray-box
+  background: rgba(187, 187, 187, 0.1)
+  @include xray-box(transparentize(#555, 0.4), 1px)
+  position: absolute
+
+  .xray-entities
+    display: none
+    left: 0
+    position: absolute
+    position: -webkit-sticky
+    position: sticky
+    top: 100%
+
+  &.tall .xray-entities
+    left: 2px
+    top: 0
+
+  .xray-entity
+    clear: left
+    float: left
+
+  &.delta0
+    background: transparentize($color-xray-selected, 0.3)
+    @include xray-box($color-xray-selected)
+    z-index: $z-xray-selected
+
+    .xray-entities
+      display: block
+
+    + .xray-entry
+      @include xray-box(#444)
+      z-index: $z-xray-next
+      .xray-entities
+        display: block
+        opacity: 0.2
+      .xray-view
+        background-color: #222
+
+  .xray-entity .xray-subject
+    top: calc(100% + 1.7em)
+
+.xray.flash
+  .xray-box.delta0
+    animation-duration: 4s
+    animation-name: flash-fade
+    animation-iteration-count: 1
+    background: transparentize(red, 0.3)
+    @include xray-box(red)
+
+////////////////////////////////////////
+// COMPONENTS: misc
+
+.flyout
+  box-shadow: $subtle-shadow
+
+.placeholder
+  $size: 1.4em
+  background: transparentize(red, 0.3)
+  border-radius: $size
+  height: $size
+  margin-left: $size * -0.5
+  margin-top: $size * -0.5
+  position: absolute
+  width: $size
+
+.confirm
+  background: #fff
+  border-top: 1px solid $color-accent
+  box-shadow: $subtle-shadow
+  padding: 1em
+  position: absolute
+  width: 25em
+
+  p
+    font-size: 1.3em
+
+  .confirm-buttons
+    padding-top: 0.8em
+    text-align: right
+
+  button
+    @include no-appearance
+    margin-left: 0.8em
+    &:before
+      @include icon
+      font-size: 1.4em
+  .confirm-yes:before
+    content: $icon-check
+  .confirm-no:before
+    content: $icon-close
+
+// we end up redoing the panel styles a little here, but we don't want to actually
+// inherit all of panel's particular quirks so we sort of have to.
+.sheet
+  background-color: #f7f7f7
+  box-shadow: $subtle-shadow
+  position: relative
+
+  .sheet-header
+    background-color: $color-accent
+    color: #fff
+    font-size: 1.3em
+    font-weight: bold
+    padding: 0.5em
+
+    .sheet-close
+      @include no-appearance
+      color: #fff
+      position: absolute
+      right: 0.8em
+      top: 0.8em
+
+      &:before
+        @include icon($icon-close)
+
+
+////////////////////////////////////////
+// COMPONENTS: inspect
+
+.janus-inspect-entity
+  .entity-title
+    cursor: default
+
+  &.highlight
+    > .entity-title, > .entity-content:before, > .entity-content:after
+      color: red
+
+  &.no-panel.highlight:hover
+    > .entity-title, > .entity-content:before, > .entity-content:after
+      color: inherit
+
+.janus-inspect-panel
+  background-color: #fff
+  border-radius: 0.2em
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
+  position: relative
+
+  &.highlight
+    box-shadow: 0 0 0 2px red
+    &:hover
+      box-shadow: none
+
+  .flyout &.highlight
+    box-shadow: none
+
+  .panel-title
+    background-color: $color-accent
+    border-radius: 0.2em 0.2em 0 0
+    color: #fff
+    cursor: default
+    font-size: 1.3em
+    font-weight: bold
+    padding: 0.5em
+
+    .janus-inspect-reference, .janus-inspect-pin
+      @include no-appearance
+      display: block
+      position: absolute
+      top: 0.85em
+      z-index: 1
+      &:before
+        @include icon
+        color: #fff
+        font-size: 1.2em
+
+    .janus-inspect-reference
+      right: 2.4em
+      &:before
+        content: $icon-console-add
+    .janus-inspect-pin
+      right: 0.6em
+      &:before
+        content: $icon-pin
+
+  .panel-derivation
+    background: #0a8b8b
+    border-top: 1px dotted #fff
+    color: #fff
+    cursor: default
+    font-size: 1.1rem
+    padding: 0.3em 0.6em
+
+    .janus-inspect-entity
+      .entity-title
+        font-size: 1.1rem
+      .model-pairs
+        color: #ccc
+
+  .panel-content
+    padding: 1em
+
+  .panel-sidebar
+    $sidebar-width: 14em
+    @include fill
+    left: auto
+    width: $sidebar-width
+
+    .panel-sidebar-title
+      background-color: $color-accent2
+      border-top-right-radius: 0.2em
+      color: #fff
+      font-size: 1.1em
+      font-weight: bold
+      padding: 0.8em
+
+    .panel-sidebar-content
+      @include fill
+      background-color: #eee
+      overflow-x: hidden
+      overflow-y: auto
+      top: 3em
+
+    ~ .panel-content
+      margin-right: $sidebar-width
+
+.janus-inspect-model.janus-inspect-panel
+  .model-add
+    @include no-appearance
+    margin-top: 0.5em
+    &:before
+      @include icon($icon-add)
+
+  .model-validation
+    border-top: 1px dotted #ccc
+    margin: -1em
+      top: 1em
+    padding: 1em
+
+    .model-validations
+      padding-top: 0.5em
+
+    .data-pair
+      .pair-key, .value-parent, .pair-function
+        display: none
+
+.namer
+  .namer-input input
+    @include no-appearance
+    background: #fff
+    font-family: $font-monospace
+    padding: 0.5em
+    width: 100%
+
+  .namer-warning
+    background-color: $color-warning
+    padding: 0.2em 0.5em
+
+.valuator-quick .namer
+  border-bottom: 1px dotted #ccc
+  margin: 0.5em
+    bottom: -0.5em
+
+.valuator .namer
+  border-bottom: 1px dotted #ccc
+
+.data-pair
+  font-size: 1.2rem
+  padding-bottom: 0.15em
+  .pair-key
+    color: $color-accent2
+  &.bound .pair-delimeter
+    position: relative
+    top: 0.15em
+    &:before
+      @include icon($icon-bound)
+    display: inline-block
+    overflow: hidden
+    white-space: nowrap
+    width: 1em
+  .pair-function
+    background: #f4f4f4
+    border-bottom: 1px dotted #ccc
+    margin: 0 0.5em
+    padding: 0 0.3em
+    &:before
+      content: 'λ'
+      font-size: 1.2em
+    &:after
+      @include icon($icon-arrow-right)
+  .pair-value
+    line-height: 1.4em
+  .pair-attribute
+    color: #666
+    padding-left: 1em
+    .janus-inspect-entity .entity-content
+      display: none
+  .pair-clear
+    @include no-appearance
+    cursor: default
+    opacity: 0
+    transition: 0.4s opacity
+    &:before
+      @include icon($icon-delete)
+      color: #aaa
+    &:hover:before
+      color: $color-error
+  &.primitive .janus-literal
+    cursor: text
+  &:hover .pair-clear
+    opacity: 1
+    transition-duration: 0
+
+.janus-inspect-attribute.janus-inspect-panel
+  dl
+    font-size: 1.2rem
+    overflow: hidden
+  dt
+    clear: left
+    display: inline
+    float: left
+    font-weight: bold
+    text-transform: lowercase
+    &:after
+      content: ':'
+      font-weight: normal
+      padding: 0 0.3em
+  dd
+    display: inline
+    float: left
+
+  .attribute-pairs
+    border-top: 1px dotted #ccc
+    display: none
+    margin: 1em -1em 0
+    padding: 1em
+      bottom: 0
+    &.has-pairs
+      display: block
+
+  .attribute-enum
+    display: none
+    padding-top: 1em
+  &.type-EnumAttribute .attribute-enum
+    display: block
+
+.janus-inspect-varying.janus-inspect-panel
+  .varying-bar
+    border-bottom: 1px dotted #ccc
+    margin: 0 -1em
+    overflow: hidden
+    padding: 0.2em 0.7em
+
+    label
+      font-weight: bold
+      line-height: 2.2em
+      padding-right: 1em
+
+    label, li
+      float: left
+
+  .varying-observation-bar
+    margin-top: -1em
+    max-height: 10em
+    overflow-x: hidden
+    overflow-y: auto
+
+    .janus-list
+      display: inline
+
+    .janus-inspect-entity
+      line-height: 2.2em
+
+      .janus-literal, .entity-title, .entity-content:before, .entity-content, .entity-content:after
+        font-size: 1.1rem
+
+      &:after
+        content: ','
+      &:last-child:after
+        content: none
+
+    .varying-inert
+      color: #777
+
+  .varying-reaction-bar
+    margin-bottom: 0.5em
+    max-height: 8em
+    overflow-y: auto
+
+    .reaction, .varying-reactions-none
+      line-height: 2.2em
+
+    .reaction.checked .rxn-value
+      background-color: $color-highlight
+
+  .varying-snapshot
+    background-color: $color-highlight
+    color: $color-text
+    margin: -0.5em -1em 0.5em
+    padding: 0.5em 0.7em
+    position: relative
+
+    .varying-snapshot-close
+      @include no-appearance
+      position: absolute
+      right: 0.5em
+      top: 0.5em
+      &:before
+        @include icon($icon-close)
+
+    .snapshot-initiation
+      border-top: 1px dotted rgba(0, 0, 0, 0.2)
+      margin-top: 0.3em
+      padding-top: 0.3em
+
+      .janus-inspect-function
+        .entity-title, .entity-content
+          font-size: 1rem
+
+  .panel-content > .varying-tree
+    padding-top: 0.4em
+    > .varying-tree > .main .node .varying-node.highlight
+      border-color: #08a4ec // TODO: copied from janus-inspect
+
+  .varying-tree .main .node .varying-node.highlight
+    border-color: red
+
+.reaction
+  &:before
+    @include icon($icon-arrow-right)
+    font-size: 8px
+    padding: 0 0.6em
+
+  &.highlight
+    .rxn-value
+      box-shadow: 0 0 0 2px red
+    &:hover .rxn-value
+      box-shadow: none
+
+.varying-delta
+  // TODO: something needs to happen here
+  //text-overflow: ellipsis
+  //white-space: nowrap
+
+  .separator:before
+    @include icon($icon-arrow-right)
+    font-size: 0.8rem
+
+.janus-inspect-function
+  &.janus-inspect-entity > .entity-content
+    // TODO: will probably cause sizing problems with nested entities later.
+    font-size: 1.2rem
+
+  &.janus-inspect-panel
+    .function-args
+      padding-bottom: 0.6em
+
+      &.inline .janus-inspect-applicant
+        &:after
+          content: ', '
+        &:last-child:after
+          content: none
+
+      .janus-inspect-applicant
+        font-size: 1.2rem
+
+        .applicant-name
+          color: $color-accent2
+
+    .function-body
+      $padding-h: 0.8em
+      background-color: #f4f4f4
+      display: block
+      font-family: $font-monospace
+      font-size: 1rem
+      max-height: 30em
+      min-width: calc(100% - #{$padding-h * 2})
+      overflow-x: auto
+      overflow-y: auto
+      padding: 0.6em $padding-h
+
+.janus-inspect-list.janus-inspect-panel
+  .data-pair
+    padding-bottom: 0.2em
+
+    hr
+      border: none
+        top: 1px dotted #999
+      left: 0
+      margin-top: -0.1em
+      position: absolute
+      right: 3em
+
+  .list-insert
+    @include no-appearance
+    color: #666
+    &:before
+      @include icon($icon-add)
+    &:hover, &.valuating
+      color: $color-accent2
+
+    &.list-insert-last
+      margin-top: 0.5em
+
+  .pair-key
+    color: #bbb
+    font-size: 1rem
+    font-weight: normal
+    line-height: 1.6em
+    vertical-align: bottom
+  .pair-delimeter
+    display: none
+
+  .list-list
+    cursor: default
+
+    .data-pair
+      &:nth-child(10n+1)
+        .pair-key
+          color: #666
+
+      &:hover
+        .list-insert, + .data-pair .list-insert
+          opacity: 1
+          transition-duration: 0
+
+    .list-insert
+      margin-top: -0.6rem
+      opacity: 0
+      position: absolute
+      right: 1em
+      transition: 0.4s opacity
+      &:hover, &.valuating
+        opacity: 1
+        + hr
+          display: block
+
+  .list-more
+    margin: 0.3em 0 0.8em
+
+  .list-last-item
+    cursor: default
+
+  .list-inspect-plain
+    border-bottom: 1px dotted #777
+    text-align: right
+
+.list-mapped .data-pair
+  .pair-value
+    font-size: 1.2rem
+
+.list-filtered
+  .list-list
+    counter-reset: filter-index -1
+    .filter-pass
+      counter-increment: filter-index
+
+  .data-pair
+    .filter-intermediate
+      font-size: 1.1rem
+
+    &.filter-pass .filter-child-index
+      color: $color-success
+      &:before
+        @include icon($icon-arrow-right)
+        padding-right: 0.3em
+      &:after
+        content: counter(filter-index)
+        font-size: 1.2rem
+
+.janus-inspect-list
+  .list-more
+    @include no-appearance
+    border-bottom: 1px dotted #777
+    display: none
+    &.has-more
+      display: inline
+
+  .array-update
+    @include no-appearance
+    margin-left: 0.3em
+    &:before
+      @include icon($icon-load)
+
+  &.janus-inspect-panel .array-update
+    color: #fff
+    font-size: 1.2em
+    margin-left: 0.4em
+    position: absolute
+
+.janus-inspect-domview.janus-inspect-panel
+  .domview-flash
+    @include no-appearance
+    color: #fff
+    font-size: 1.2em
+    margin-left: 0.4em
+    position: absolute
+    &:before
+      @include icon($icon-eye)
+
+  .domview-mutations .mutation
+    padding-bottom: 0.8em
+    &:last-child
+      padding-bottom: 0
+
+  .mutation-selector
+    color: $color-accent2
+    font-family: $font-monospace
+    font-size: 1.2rem
+    &.repeated
+      display: none
+
+  .mutation-type
+    font-size: 1.2rem
+    padding-left: 0.5em
+  .mutation-operation
+    font-weight: bold
+  .mutation-param.has-param
+    &:before
+      content: '('
+      font-weight: bold
+    &:after
+      content: ')'
+      font-weight: bold
+
+  .mutation-binding
+    font-size: 1.1rem
+
+  .domview-display
+    .domview-display-label
+      border-top: 1px dotted #ccc
+      font-weight: bold
+      margin-bottom: 1em
+      margin-top: 0.5em
+      padding: 0.5em 0
+
+    &.unwired .domview-display-label:after
+      color: red
+      content: " (This view was moved; events may not work)"
+      font-weight: normal
+
+.janus-inspect-object
+  .object-update
+    @include no-appearance
+    margin-left: 0.3em
+    &:before
+      @include icon($icon-load)
+
+  &.janus-inspect-panel .object-update
+    color: #fff
+    font-size: 1.2em
+    margin-left: 0.4em
+    position: absolute
+
+.janus-inspect-entity.janus-inspect-date
+  .entity-content
+    color: #999
+    font-family: $font-monospace
+    font-size: 1.1rem
+  .date-date, .date-time
+    color: $color-text
+
+

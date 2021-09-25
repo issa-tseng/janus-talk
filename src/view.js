@@ -14,7 +14,7 @@ const SlideView = DomView.build($(`
     .classed('active', from.subject()
       .and.app('active-slide')
       .all.map((slide, active) => slide === active))
-    .css('transform', from.app('layout-slide').and.subject().all.map((f, x) => f(x))),
+    .css('transform', from.app('layout').and.subject().all.map((f, x) => f(x))),
 
   find('.slide-contents').html(from('idx').map(idx => $(`#content #s${idx}`).html())), // lol :(
   find('.slide-name').text(from('name'))
@@ -24,7 +24,7 @@ const SectionView = DomView.build(
   $(`<h2/>`),
   find('h2')
     .text(from('name'))
-    .css('transform', from.app('layout-section').and.subject().all.map((f, x) => f(x)))
+    .css('transform', from.app('layout').and.subject().all.map((f, x) => f(x)))
 );
 
 class DeckView extends DomView.build($(`
@@ -34,9 +34,20 @@ class DeckView extends DomView.build($(`
     <div id="sections"/>
     <div class="slides"/>
   </div>
+  <div id="repl"/>
+  <div id="flyouts"/>
+  <div id="sheets"/>
+  <div id="xray"/>
+  <div id="junk"/>
 </div>`), template(
   find('#sections').render(from('sections')),
-  find('.slides').render(from('slides'))
+  find('.slides').render(from('slides')),
+
+  find('#repl').render(from('repl')),
+  find('#flyouts').render(from('flyouts')),
+  find('#sheets').render(from('sheets')),
+  find('#xray').render(from('xray')),
+  find('#junk').render(from('junk'))
 )) {
   _wireEvents() {
     const dom = this.artifact();
@@ -53,6 +64,12 @@ class DeckView extends DomView.build($(`
     stdlib.varying.fromEvent($window, 'resize', () => {
       this.subject.set('width', $window.width());
       this.subject.set('height', $window.height());
+    });
+
+    // fix weird safari bug with bad hacks events
+    this.subject.get('overview').react(() => {
+      $('html, body').scrollLeft(0);
+      setTimeout(() => { $('html, body').scrollLeft(0); }, 0);
     });
   }
 }
