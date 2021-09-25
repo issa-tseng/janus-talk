@@ -129,6 +129,7 @@ const ReferenceView = DomView.build(StatementVM, $(`
     <div class="statement-result"/>
   </div>`), template(
   find('.statement').classed('named', from('named')),
+  find('.statement-placeholder').text(from('name').map(s => blank(s) ? 'value' : s)),
   find('.statement-name').render(from.attribute('name')),
   StatementView.template.toolbox,
   find('.statement-result').render(from.vm('result')).context(from.vm('context'))
@@ -191,10 +192,7 @@ class ReplView extends DomView.build($(`
 `), template(
   find('.repl').classed('autopaneled', from('autopanel')),
   find('.repl-xray').on('click', (e, repl, view) => {
-    view.options.app.xray((result) => {
-      repl.reference(result);
-      view.options.app.showRepl();
-    });
+    view.options.app.xray((result) => { repl.reference(result); });
   }),
   find('.repl-autopanel').render(from.attribute('autopanel'))
     .criteria({ style: 'button' })

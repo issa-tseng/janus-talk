@@ -3,6 +3,7 @@ const stdlib = require('janus-stdlib');
 const $ = require('jquery');
 
 const { Slide, Section, Deck } = require('./model');
+const { highlight } = require('./extern/view/highlighter');
 
 const SlideView = DomView.build($(`
 <section class="slide">
@@ -50,6 +51,7 @@ class DeckView extends DomView.build($(`
   find('#junk').render(from('junk'))
 )) {
   _wireEvents() {
+    const deck = this.subject;
     const dom = this.artifact();
     const $window = $(window);
 
@@ -57,21 +59,41 @@ class DeckView extends DomView.build($(`
     $window.on('keydown', (event) => {
       if ($(event.target).closest('input,textarea').length > 0) return;
 
-      if (event.which === 192) this.subject.toggleOverview();
-      else if (event.which === 37) this.subject.previous();
-      else if (event.which === 39) this.subject.advance();
+      if (event.which === 192) deck.toggleOverview();
+      else if (event.which === 37) deck.previous();
+      else if (event.which === 39) deck.advance();
     });
 
     // resize events
     stdlib.varying.fromEvent($window, 'resize', () => {
-      this.subject.set('width', $window.width());
-      this.subject.set('height', $window.height());
+      deck.set('width', $window.width());
+      deck.set('height', $window.height());
     });
 
     // fix weird safari bug with bad hacks events
-    this.subject.get('overview').react(() => {
+    deck.get('overview').react(() => {
       $('html, body').scrollLeft(0);
       setTimeout(() => { $('html, body').scrollLeft(0); }, 0);
+    });
+
+    // inspect highlighting
+    highlight(deck);
+
+    // inspect hovering
+    dom.on('mouseenter', '.entity-title', (event) => {
+      const trigger = $(event.target);
+      const entity = trigger.closest('.janus-inspect-entity');
+      if (entity.hasClass('no-panel')) return;
+
+      const timer = setTimeout(_ => { deck.flyout(trigger, entity.view().subject, { context: 'panel' }); }, 300);
+      trigger.one('mouseleave', _ => { clearTimeout(timer); });
+    });
+
+    dom.on('mouseenter', '.varying-node', (event) => {
+      const node = $(event.currentTarget);
+      if (node.parents('.varying-tree').length === 2) return; // is the root node in the panel.
+      const timer = setTimeout(_ => { deck.flyout(node, node.view().subject, { context: 'panel' }); }, 300);
+      node.one('mouseleave', _ => { clearTimeout(timer); });
     });
   }
 }
