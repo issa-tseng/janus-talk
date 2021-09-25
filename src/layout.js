@@ -1,24 +1,44 @@
 const { Trait, initial, bind, from } = require('janus');
 
-const translate = ({ x, y }) => `translate(${x}vw, ${y}vh)`;
+const cheapGrid = (sections) => {
+  let idx = 0, sect = 0, row = 0, col = 0;
+  for (const section of sections) {
+    col = 0;
+    section.idx = idx;
+    section.row = row;
+    section.sect = sect++;
+    for (const slide of section.get_('slides')) {
+      if (col === 5) {
+        row++;
+        col = 0;
+      }
 
-const scaleFactor = 0.12;
+      slide.idx = idx;
+      slide.set('idx', idx++);
+      slide.sect = sect;
+      slide.row = row;
+      slide.col = col++;
+    }
+    row++;
+  }
+};
+
+const kscale = 0.12, kh = 110, kho = 130, kw = 110, ksect = 16;
 
 const Layout = Trait(
   initial('origin.x', 0),
   initial('origin.y', 0),
 
-  bind('layout', from('overview').and('origin.x').and('origin.y')
-    .all.map((overview, ox, oy) => ({ sect, row, col, idx }) =>
-      (overview === true)
-        ? { x: (col * 110) - ox, y: (sect * 30) + (row * 130) - oy }
-        : { x: 0, y: idx * 110 })),
+  bind('layout-section', from('overview').and('active-idx')
+    .all.map((overview, active) => ({ sect, row, idx }) => (overview === true)
+      ? `translate(2vw, 5vh) scale(${kscale}) translate(0, ${(sect * ksect) + (row * kho)}vh)`
+      : `translate(0, ${(idx - active) * kh}vh)`)),
 
-  bind('viewport', from('overview').and('origin.x').and('origin.y')
-    .all.map((overview, ox, oy) => ({ idx }) =>
-      (overview === true) ? `translate(${2 + (ox * scaleFactor)}vw, ${5 + (oy * scaleFactor)}vh) scale(${scaleFactor})`
-        : `translate(0, ${idx * -110}vh`))
+  bind('layout-slide', from('overview').and('active-idx')
+    .all.map((overview, active) => ({ sect, row, col, idx }) => (overview === true)
+      ? `translate(2vw, 5vh) scale(${kscale}) translate(${col * kw}vw, ${(sect * ksect) + (row * kho)}vh)`
+      : `translate(0, ${(idx - active) * kh}vh)`))
 );
 
-module.exports = { translate, Layout };
+module.exports = { cheapGrid, Layout };
 

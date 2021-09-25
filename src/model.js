@@ -1,6 +1,6 @@
 const { Model, attribute, initial, bind, from, List, App } = require('janus');
 const { varying } = require('janus-stdlib');
-const { Layout } = require('./layout');
+const { cheapGrid, Layout } = require('./layout');
 
 class Slide extends Model {}
 const Slides = List.of(Slide);
@@ -14,8 +14,7 @@ class Deck extends App.build(
   Layout,
 
   attribute('sections', attribute.List.of(Sections)),
-  initial('_overview', false),
-  bind('overview', from('_overview').pipe(varying.delay(1000))),
+  initial('overview', false),
 
   bind('slides', from('sections').map(sxs => sxs.flatMap(sx => sx.get('slides')).flatten())),
   initial('active-idx', 0),
@@ -24,23 +23,7 @@ class Deck extends App.build(
 ) {
   _initialize() {
     // annotate all the counts
-    let idx = 0, sect = 0, row = 0, col = 0;
-    for (const section of this.get_('sections')) {
-      col = 0;
-      for (const slide of section.get_('slides')) {
-        slide.idx = idx;
-        slide.set('idx', idx++);
-        slide.sect = sect;
-        slide.row = row;
-        slide.col = col++;
-
-        if (col === 5) {
-          row++;
-          col = 0;
-        }
-      }
-      sect++; row++;
-    }
+    cheapGrid(this.get_('sections'));
   }
 
   previous() {
@@ -49,25 +32,14 @@ class Deck extends App.build(
     this.set('active-idx', to);
   }
   advance() {
-    console.log(this.get_('active-idx'));
     const to = this.get_('active-idx') + 1;
     if (to === this.get_('slides').length_) return;
     this.set('active-idx', to);
   }
 
-  toggleOverview() {
-    this.setOrigin();
-    this.set('_overview', !this.get_('_overview'));
-  }
-
-  setOrigin() {
-    this.set('relayout', true);
-    const { x, y } = tap(this.get_('layout')(this.get_('active-slide')));
-    this.set('origin', { x: this.get_('origin.x') + x, y: this.get_('origin.y') + y });
-    this.set('relayout', false);
-  }
+  toggleOverview() { this.set('overview', !this.get_('overview')); }
 }
 
 
-module.exports = { Slide, Deck };
+module.exports = { Slide, Section, Deck };
 

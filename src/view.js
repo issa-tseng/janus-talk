@@ -2,8 +2,7 @@ const { DomView, template, find, from } = require('janus');
 const stdlib = require('janus-stdlib');
 const $ = require('jquery');
 
-const { Slide, Deck } = require('./model');
-const { translate } = require('./layout');
+const { Slide, Section, Deck } = require('./model');
 
 const SlideView = DomView.build($(`
 <section class="slide">
@@ -15,11 +14,18 @@ const SlideView = DomView.build($(`
     .classed('active', from.subject()
       .and.app('active-slide')
       .all.map((slide, active) => slide === active))
-    .css('transform', from.app('layout').and.subject().all.map((f, x) => translate(f(x)))),
+    .css('transform', from.app('layout-slide').and.subject().all.map((f, x) => f(x))),
 
   find('.slide-contents').html(from('idx').map(idx => $(`#content #s${idx}`).html())), // lol :(
   find('.slide-name').text(from('name'))
 ));
+
+const SectionView = DomView.build(
+  $(`<h2/>`),
+  find('h2')
+    .text(from('name'))
+    .css('transform', from.app('layout-section').and.subject().all.map((f, x) => f(x)))
+);
 
 class DeckView extends DomView.build($(`
 <div class="deck">
@@ -29,11 +35,7 @@ class DeckView extends DomView.build($(`
     <div class="slides"/>
   </div>
 </div>`), template(
-  find('#canvas')
-    .classed('relayout', from('relayout').pipe(stdlib.varying.sticky({ true: 0 })))
-    .css('transform', from('viewport').and('active-slide').all.map((f, x) => f(x))),
-
-  find('.sections').render(from('sections')),
+  find('#sections').render(from('sections')),
   find('.slides').render(from('slides'))
 )) {
   _wireEvents() {
@@ -59,6 +61,7 @@ module.exports = {
   SlideView, DeckView,
   registerWith(library) {
     library.register(Slide, SlideView);
+    library.register(Section, SectionView);
     library.register(Deck, DeckView);
   }
 };

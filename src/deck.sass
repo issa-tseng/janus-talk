@@ -23,7 +23,7 @@ html
 
 body
   background-color: $color-background
-  transition: 2s background
+  transition: 1s background
   .overview &
     background-color: $color-overview-background
 
@@ -36,12 +36,7 @@ html, body
 ////////////////////////////////////////////////////////////
 // LAYOUT
 
-#canvas
-  transform-origin: top left
-  transition: 3s transform $ease-extreme-out
 
-  &.relayout
-    transition: none
 
 #content
   display: none
@@ -50,18 +45,22 @@ html, body
 ////////////////////////////////////////////////////////////
 // BASIC
 
+#sections h2
+  font-size: 10vh
+  position: absolute
+  transform-origin: top left
+  transition: 0.7s transform $ease-extreme-out
+
 section
   background: $color-background
   height: 100vh
   position: absolute
-  transition: 3s transform $ease-extreme-out
+  transform-origin: top left
+  transition: 0.7s transform $ease-extreme-out
   width: 100vw
 
   &.active
     z-index: $z-active-slide
-
-  .relayout &
-    transition: none
 
   .overview &
     border: 2px solid rgba(255, 255, 255, 0.13)
