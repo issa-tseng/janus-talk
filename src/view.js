@@ -55,6 +55,8 @@ class DeckView extends DomView.build($(`
 
     // keypress events
     $window.on('keydown', (event) => {
+      if ($(event.target).closest('input,textarea').length > 0) return;
+
       if (event.which === 192) this.subject.toggleOverview();
       else if (event.which === 37) this.subject.previous();
       else if (event.which === 39) this.subject.advance();

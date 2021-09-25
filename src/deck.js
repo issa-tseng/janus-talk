@@ -42,6 +42,10 @@ deckView.wireEvents();
 
 deck.get('overview').react(false, active => { $('html').toggleClass('overview', !!active) });
 
-// bad hack to fix a safari bug
-$(() => { $('html, body').scrollLeft(0); });
+$(() => {
+  $(':focus').blur();
+
+  // bad hack to fix a safari bug
+  $('html, body').scrollLeft(0);
+});
 
