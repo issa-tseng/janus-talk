@@ -123,7 +123,7 @@ class Repl extends Model.build(
   initial.writing('env.inject', {}),
 
   attribute('pins', attribute.List.withInitial()),
-  attribute('autopanel', attribute.Boolean) // TODO: => viewmodel?
+  initial('autopanel', true, attribute.Boolean)
 ) {
   _initialize() {
     this.set('env.base', new Env(rootEnv, this.get_('env.inject')));

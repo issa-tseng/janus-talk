@@ -1,7 +1,7 @@
 $color-accent: #0b9a9a
-$color-accent2: #1c0110
+$color-accent2: #006c8c
 $color-bg: #f7f7f7
-$color-text: #eee
+$color-text: #111
 $color-success: #4c4
 $color-error: #c44
 $color-warning: #fadd00
@@ -212,7 +212,7 @@ $repl-chrome-padding: 1em
 $repl-chrome-width: 2.4em
 $repl-chrome-outer-width: (2 * $repl-chrome-padding) + $repl-chrome-width
 $repl-chrome-color-fg: #666
-$repl-chrome-color-bg: #1c0110
+$repl-chrome-color-bg: #0d0409
 $pin-color-bg: #ddd
 $pin-chrome-padding: 0.4em
 $pin-chrome-width: 1.6em
@@ -238,8 +238,6 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
         @include icon
         font-size: 2em
 
-      &.repl-close:before
-        content: $icon-close-circle
       &.repl-xray:before
         content: $icon-target
       &.repl-clear:before
@@ -860,8 +858,9 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
       color: inherit
 
 .janus-inspect-panel
-  background-color: #fff
+  background-color: #ddd
   border-radius: 0.2em
+  color: $color-text
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
   position: relative
 
@@ -874,7 +873,7 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
     box-shadow: none
 
   .panel-title
-    background-color: $color-accent
+    background-color: $color-accent2
     border-radius: 0.2em 0.2em 0 0
     color: #fff
     cursor: default
@@ -903,7 +902,7 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
         content: $icon-pin
 
   .panel-derivation
-    background: #0a8b8b
+    background: #005973
     border-top: 1px dotted #fff
     color: #fff
     cursor: default

@@ -44,6 +44,10 @@ class Deck extends App.build(
       if (typeof view.highlight === 'function')
         this.original().emit('inspected', view, view.highlight());
     });
+
+    // convenient moment to add a reference to deck
+    this.get_('repl').reference(this, 'deck');
+    console.log(this.get_('repl').get_('statements'));
   }
 
   ////////////////////////////////////////////////////////////
