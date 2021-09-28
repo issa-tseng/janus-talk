@@ -59,6 +59,7 @@ class Deck extends App.build(
 
     // convenient moment to add a reference to deck
     this.get_('repl').reference(this, 'deck');
+    this.get_('repl').get_('statements').get_(0).set('panel', true);
   }
 
   ////////////////////////////////////////////////////////////
