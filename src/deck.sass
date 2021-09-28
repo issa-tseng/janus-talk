@@ -61,6 +61,16 @@ h1, h2, h3, h4, h5, h6
   position: absolute
   z-index: $z-flyout
 
+  .flyout-close
+    @include no-appearance
+    position: absolute
+    right: 0.6em
+    top: 0.6em
+
+    &:before
+      @include icon($icon-close)
+      font-size: 1.2em
+
   .janus-inspect-panel
     min-width: 30em
 

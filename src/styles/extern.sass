@@ -22,19 +22,6 @@ $color-xray-selected: #2364cb
   &::-webkit-scrollbar-thumb
     background: $color-thumb
 
-@mixin icon($which: null)
-  @if $which
-    content: $which
-  font-family: 'icons' !important
-  -webkit-font-smoothing: antialiased
-  -moz-osx-font-smoothing: grayscale
-  font-style: normal
-  font-variant: normal
-  font-weight: normal
-  line-height: 1
-  speak: none
-  text-transform: none
-
 @font-face
   font-family: 'icons';
   src: url('/assets/icons.eot?g')
@@ -577,8 +564,10 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
     padding: 0.5em
     .CodeMirror
       background-color: #fff
+      .CodeMirror-cursor
+        border-left-color: #000
 
-  .statement-placeholder, .statement-name, .statement-toolbox
+  .statement-header
     display: none
 
 
@@ -1084,6 +1073,11 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
     @include icon($icon-arrow-right)
     font-size: 8px
     padding: 0 0.6em
+
+  &.target-changed .rxn-value
+    background: #f7f7f7
+    > span
+      margin-bottom: -0.6em
 
   &.highlight
     .rxn-value

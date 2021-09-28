@@ -16,6 +16,7 @@ $ease-extreme-out: cubic-bezier(.05, .9, 0, 1)
 // Z
 
 $z-active-slide: 1
+$z-repl: 100
 $z-sheets: 199
 $z-flyout: 200
 $z-junk: 400
@@ -51,6 +52,19 @@ $icon-target: '\e914'
 $icon-swap: '\e911'
 $icon-window: '\e909'
 $icon-window-up: '\e90f'
+
+@mixin icon($which: null)
+  @if $which
+    content: $which
+  font-family: 'icons' !important
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  font-style: normal
+  font-variant: normal
+  font-weight: normal
+  line-height: 1
+  speak: none
+  text-transform: none
 
 // F
 
