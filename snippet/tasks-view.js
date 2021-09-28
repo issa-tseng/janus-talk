@@ -11,8 +11,8 @@ const TaskView = DomView.build($(`
 ));
 
 const ChecklistView = DomView.build($(`
-<div class="todo">
-  <p>Completed: <span class="done"/> of <span class="total"/></p>
+<div class="checklist">
+  <p><span class="done"/> of <span class="total"/> complete</p>
   <div class="list"/>
   <button>New</button>
 </div>`), template(

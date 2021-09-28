@@ -32,6 +32,12 @@ html, body
   overflow: hidden
   width: 100vw
 
+////////////////////////////////////////////////////////////////////////////////
+// BASICS
+
+h1, h2, h3, h4, h5, h6
+  font-weight: normal
+
 .hide
   display: none !important
 
@@ -130,8 +136,13 @@ section
       transition: 1s opacity
 
 .snippet
+  h3
+    font-size: 3vh
+    text-indent: 0.15em
   .CodeMirror
     background: transparent
+    font-size: 1.6vh
+    height: auto
   .snippet-revert
     display: none
 

@@ -4,6 +4,7 @@
   h1
     bottom: 13vh
     font-size: 17vh
+    font-weight: bold
     left: -0.8rem
     letter-spacing: -0.07em
     position: absolute
@@ -26,4 +27,70 @@
 
     path
       fill: #28000a
+
+#slide-3
+  .snippet
+    position: absolute
+
+  #snippet-tasks-model .snippet
+    left: 5vw
+    top: 10vh
+  #snippet-tasks-view .snippet
+    height: 55vh
+    left: 5vw
+    top: 37vh
+  #snippet-tasks-main .snippet
+    left: 50vw
+    top: 10vh
+  #tasks
+    left: 50vw
+    padding: 0.5em
+    position: absolute
+    top: 28vh
+    z-index: 2
+
+    .checklist
+      background: #ededed
+      border: 1px dotted #000
+      border-radius: 0.3em
+      color: #333
+      padding: 1em
+      width: 30em
+
+      p
+        bottom: 1.3em
+        font-size: 1.5vh
+        position: absolute
+        right: 1.3em
+
+      .name input
+        @include no-appearance
+        background: #e6e6e6
+        border-bottom: 1px solid #2fb500
+        font-family: helvetica
+        font-size: 1.4vh
+        padding: 0.4em 0.8em
+        width: calc(100% - 3.5em)
+
+      button
+        @include no-appearance
+        background: #666
+        border-radius: 0.2em
+        color: #fff
+        padding: 0.3em 0.6em 0.4em
+
+      .task
+        padding: 0.3em 0
+        position: relative
+        &:last-child
+          margin-bottom: 1em
+
+        button
+          display: none
+          position: absolute
+          right: 0.8em
+          top: 0.5em
+
+        &:hover button
+          display: block
 

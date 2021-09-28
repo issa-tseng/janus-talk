@@ -12,21 +12,6 @@ $color-xray-selected: #2364cb
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// UTIL
-
-@mixin fill($buffer: 0)
-  bottom: $buffer
-  left: $buffer
-  position: absolute
-  right: $buffer
-  top: $buffer
-
-@mixin reify
-  content: ''
-  display: block
-
-
-////////////////////////////////////////////////////////////////////////////////
 // COMMON
 
 @mixin custom-scrollbar($color-thumb: $color-accent, $color-gutter: rgba(0, 0, 10, 0.8))
@@ -49,13 +34,6 @@ $color-xray-selected: #2364cb
   line-height: 1
   speak: none
   text-transform: none
-
-@mixin no-appearance
-  background: none
-  border: none
-  margin: 0
-  outline: none
-  padding: 0
 
 @font-face
   font-family: 'icons';
@@ -815,7 +793,7 @@ $pin-chrome-outer-width: (2 * $pin-chrome-padding) + $pin-chrome-width
 
 .janus-inspect-panel
   background-color: #ddd
-  border-radius: 0.2em
+  border-radius: 0.5em
   color: $color-text
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
   position: relative

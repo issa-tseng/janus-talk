@@ -52,3 +52,23 @@ $icon-swap: '\e911'
 $icon-window: '\e909'
 $icon-window-up: '\e90f'
 
+// F
+
+@mixin fill($buffer: 0)
+  bottom: $buffer
+  left: $buffer
+  position: absolute
+  right: $buffer
+  top: $buffer
+
+@mixin reify
+  content: ''
+  display: block
+
+@mixin no-appearance
+  background: none
+  border: none
+  margin: 0
+  outline: none
+  padding: 0
+

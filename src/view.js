@@ -1,4 +1,4 @@
-const { Varying, DomView, template, find, from, mutators } = require('janus');
+const { Varying, Model, attribute, bind, DomView, template, find, from, mutators } = require('janus');
 const stdlib = require('janus-stdlib');
 const $ = require('jquery');
 
@@ -37,11 +37,22 @@ class SlideView extends DomView.build($(`
   }
 }
 
-const SnippetView = DomView.build($(`
+const SnippetVM = Model.build(
+  attribute('collapsed', attribute.Boolean),
+
+  bind('name', from.subject('id').map(id => {
+    const match = /^[^-]+-(.+)$/.exec(id);
+    return (match == null) ? '' : match[1];
+  }))
+);
+const SnippetView = DomView.build(SnippetVM, $(`
 <div class="snippet">
+  <h3/>
   <div class="snippet-code"/>
   <button class="snippet-revert">Revert</button>
 `), template(
+  find('.snippet').classed('collapsed', from.vm('collapsed')),
+  find('h3').text(from.vm('name')),
   find('.snippet-code').render(from.attribute('snippet')).criteria({ style: 'code' }),
   find('.snippet-revert').on('click', (_, snippet) => { snippet.revert(); })
 ));
