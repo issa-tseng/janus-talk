@@ -69,11 +69,11 @@ h1, h2, h3, h4, h5, h6
 
 #repl
   bottom: 0
-  //overflow: hidden
   position: absolute
   top: 0
   right: 0
   width: 31vw
+  z-index: $z-repl
 
   .repl
     background-color: #191919
@@ -84,7 +84,7 @@ h1, h2, h3, h4, h5, h6
     transition: 0.7s transform $ease-extreme-out
     width: 31vw
 
-    .overview &
+    .console &, .overview &
       transform: translate(-31vw, 0)
 
 #sheets

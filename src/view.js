@@ -95,9 +95,13 @@ class DeckView extends DomView.build($(`
     $window.on('keydown', (event) => {
       if ($(event.target).closest('input,textarea').length > 0) return;
 
-      if (event.which === 192) deck.toggleOverview();
-      else if (event.which === 37) deck.previous();
+      if (event.which === 37) deck.previous();
       else if (event.which === 39) deck.advance();
+      else if (event.which === 192) deck.toggleConsole();
+      else if (event.which === 9) {
+        event.preventDefault();
+        deck.toggleOverview();
+      }
     });
 
     // resize events
@@ -107,7 +111,7 @@ class DeckView extends DomView.build($(`
     });
 
     // fix weird safari bug with bad hacks events
-    deck.get('overview').react(() => {
+    Varying.all([ deck.get('console'), deck.get('overview') ]).react(() => {
       $('html, body').scrollLeft(0);
       setTimeout(() => { $('html, body').scrollLeft(0); }, 0);
     });

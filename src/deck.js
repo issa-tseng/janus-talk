@@ -57,10 +57,13 @@ const deckView = deck.view(deck);
 $('main').append(deckView.artifact());
 deckView.wireEvents();
 
-deck.get('overview').react(false, active => { $('html').toggleClass('overview', !!active) });
-
-$(() => {
-  $(':focus').blur();
-  $('html, body').scrollLeft(0); // bad hack to fix a safari bug
+htmlClass = (c => {
+  deck.get(c).react(false, x => { $('html').toggleClass(c, !!x) });
 });
+htmlClass('console'); htmlClass('overview');
+
+$(() => { setTimeout(() => { // a collection of bad hacks.
+  document.activeElement.blur();
+  $('html, body').scrollLeft(0).scrollTop(0);
+}), 100 });
 

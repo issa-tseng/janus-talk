@@ -22,15 +22,16 @@ const cheapGrid = (sections) => {
   }
 };
 
-const kscale = 0.12, kh = 110, kho = 130, kwo = 110, ksect = 16;
+const kscale = 0.12, kh = 110, kho = 130, kwo = 110, ksect = 16, kcscale = 0.65, kcx = 3, kcy = 23;
 
 const Layout = Trait(
   initial('origin.x', 0),
   initial('origin.y', 0),
 
-  bind('layout', from('overview').and('active-idx')
-    .all.map((overview, active) => ({ sect, row, col, idx }) => (overview === true)
-      ? `translate(2vw, 5vh) scale(${kscale}) translate(${col * kwo}vw, ${(sect * ksect) + (row * kho)}vh)`
+  bind('layout', from('overview').and('console').and('active-idx')
+    .all.map((overview, console, active) => ({ sect, row, col, idx }) =>
+      overview ? `translate(2vw, 5vh) scale(${kscale}) translate(${col * kwo}vw, ${(sect * ksect) + (row * kho)}vh)`
+      : console ? `scale(${kcscale}) translate(${kcx}vw, ${(idx - active) * kh + kcy}vh)`
       : `translate(0, ${(idx - active) * kh}vh)`))
 );
 

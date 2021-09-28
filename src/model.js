@@ -76,6 +76,7 @@ class Deck extends App.build(
     this.set('active-idx', to);
   }
 
+  toggleConsole() { this.set('console', !this.get_('console')); }
   toggleOverview() { this.set('overview', !this.get_('overview')); }
 
 
