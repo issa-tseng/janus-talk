@@ -6,6 +6,26 @@ const { Snippet, Slide, Section, Deck } = require('./model');
 const { highlight } = require('./extern/view/highlighter');
 
 
+const SnippetVM = Model.build(
+  attribute('collapsed', attribute.Boolean),
+
+  bind('name', from.subject('id').map(id => {
+    const match = /^[^-]+-(.+)$/.exec(id);
+    return (match == null) ? '' : match[1];
+  }))
+);
+const SnippetView = DomView.build(SnippetVM, $(`
+<div class="snippet">
+  <h3/>
+  <div class="snippet-code"/>
+  <button class="snippet-revert">Revert</button>
+`), template(
+  find('.snippet').classed('collapsed', from.vm('collapsed')),
+  find('h3').text(from.vm('name')),
+  find('.snippet-code').render(from.attribute('snippet')).criteria({ style: 'code' }),
+  find('.snippet-revert').on('click', (_, snippet) => { snippet.revert(); })
+));
+
 class SlideView extends DomView.build($(`
   <section class="slide">
     <div class="slide-contents"/>
@@ -30,32 +50,12 @@ class SlideView extends DomView.build($(`
         (artifact.find(`#snippet-${snippet.get_('id')}`), this.pointer(), true));
 
     for (const sample of this.subject.get_('samples'))
-      this._bindings.push(mutators.render(from(sample.get('result')).map(tap))
+      this._bindings.push(mutators.render(from(sample.get('result')))
         (artifact.find(sample.get_('target')), this.pointer(), true));
 
     return artifact;
   }
 }
-
-const SnippetVM = Model.build(
-  attribute('collapsed', attribute.Boolean),
-
-  bind('name', from.subject('id').map(id => {
-    const match = /^[^-]+-(.+)$/.exec(id);
-    return (match == null) ? '' : match[1];
-  }))
-);
-const SnippetView = DomView.build(SnippetVM, $(`
-<div class="snippet">
-  <h3/>
-  <div class="snippet-code"/>
-  <button class="snippet-revert">Revert</button>
-`), template(
-  find('.snippet').classed('collapsed', from.vm('collapsed')),
-  find('h3').text(from.vm('name')),
-  find('.snippet-code').render(from.attribute('snippet')).criteria({ style: 'code' }),
-  find('.snippet-revert').on('click', (_, snippet) => { snippet.revert(); })
-));
 
 const SectionView = DomView.build(
   $(`<h2/>`),

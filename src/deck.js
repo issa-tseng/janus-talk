@@ -40,8 +40,9 @@ require('./extern/view/view').registerWith(deck.views);
 require('./extern/view/xray').registerWith(deck.views);
 require('./view').registerWith(deck.views);
 
+const markup = $('#content').detach();
 for (const slide of deck.get_('slides')) {
-  const contents = $(`#content #s${slide.idx}`).detach();
+  const contents = markup.children(`#s${slide.idx}`);
   const snippets = slide.get_('snippets');
   for (const sample of slide.get_('samples')) sample.set('snippets', snippets);
   contents.find('pre').each(function() {
