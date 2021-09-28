@@ -1,8 +1,7 @@
-window.tap = (x) => { console.log(x); return x; };
-window.scrollTo(0, 0);
-
 require('./util');
 const $ = window.$ = require('jquery');
+window.tap = (x) => { console.log(x); return x; };
+window.scrollTo(0, 0);
 
 const { Deck, Slide } = require('./model');
 const deck = Deck.deserialize({ sections: [{
@@ -44,8 +43,6 @@ deck.get('overview').react(false, active => { $('html').toggleClass('overview', 
 
 $(() => {
   $(':focus').blur();
-
-  // bad hack to fix a safari bug
-  $('html, body').scrollLeft(0);
+  $('html, body').scrollLeft(0); // bad hack to fix a safari bug
 });
 

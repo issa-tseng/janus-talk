@@ -2,13 +2,13 @@ const { Model, attribute, initial, bind, from, List, App } = require('janus');
 const { varying } = require('janus-stdlib');
 const { cheapGrid, Layout } = require('./layout');
 
-const { holdParent, Flyout } = require('./extern/model/flyout');
+const { Confirm } = require('./extern/view/confirm');
+const { Flyout, holdParent } = require('./extern/model/flyout');
 const { Placeholder } = require('./extern/view/placeholder');
-const { Sheet } = require('./extern/model/sheet');
 const { Repl } = require('./extern/model/repl');
+const { Sheet } = require('./extern/model/sheet');
 const { Valuator } = require('./extern/model/valuator');
 const { XRay } = require('./extern/model/xray');
-const { Confirm } = require('./extern/view/confirm');
 
 
 class Slide extends Model {}
@@ -47,7 +47,6 @@ class Deck extends App.build(
 
     // convenient moment to add a reference to deck
     this.get_('repl').reference(this, 'deck');
-    console.log(this.get_('repl').get_('statements'));
   }
 
   ////////////////////////////////////////////////////////////
