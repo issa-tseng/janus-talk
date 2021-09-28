@@ -53,12 +53,12 @@ class XRayEntryView extends DomView.build($(`
   find('.xray-entry')
     .classGroup('delta', from('idx.delta'))
 
-    .classed('tall', from('size.height').map((x) => x > 100))
+    .classed('tall', from('rect.height').map((x) => x > 100))
 
-    .css('left', from('offset.left').map(px))
-    .css('top', from('offset.top').map(px))
-    .css('width', from('size.width').map(px))
-    .css('height', from('size.height').map(px)),
+    .css('left', from('rect.left').map(px))
+    .css('top', from('rect.top').map(px))
+    .css('width', from('rect.width').map(px))
+    .css('height', from('rect.height').map(px)),
 
   find('.xray-view').render(from('view').map(inspect)),
   find('.xray-subject')
@@ -71,12 +71,15 @@ class XRayEntryView extends DomView.build($(`
     const targetDom = target.artifact();
     const resize = () => {
       if (cache.has(targetDom)) {
-        subject.set(cache.get(targetDom));
+        subject.set('rect', cache.get(targetDom));
       } else {
-        const layout = { offset: targetDom.offset(),
-          size: { width: targetDom.width(), height: targetDom.height() } };
-        subject.set(layout);
-        cache.set(targetDom, layout);
+        const domRect = targetDom[0].getBoundingClientRect();
+        const rect = {
+          left: domRect.left, top: domRect.top,
+          width: domRect.width, height: domRect.height
+        };
+        subject.set('rect', rect);
+        cache.set(targetDom, rect);
       }
     };
 
