@@ -1,6 +1,6 @@
 const Task = Model.build(
-  attribute('name', attribute.Text),
-  attribute('done', attribute.Boolean)
+  attribute('done', attribute.Boolean),
+  attribute('name', attribute.Text)
 );
 
 class Checklist extends Model {}

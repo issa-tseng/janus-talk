@@ -18,8 +18,8 @@ const ChecklistView = DomView.build($(`
 </div>`), template(
   find('.list').render(from('tasks')),
 
-  find('.done').text(from('tasks').flatMap(ts => ts.filter(t => t.get('done')).length)),
   find('.total').text(from('tasks').flatMap(ts => ts.length)),
+  find('.done').text(from('tasks').flatMap(ts => ts.filter(t => t.get('done')).length)),
 
-  find('button').on('click', (event, subject) => { subject.get_('tasks').add(new Task()); })
+  find('button').on('click', (_, checklist) => { checklist.get_('tasks').add(new Task()); })
 ));
