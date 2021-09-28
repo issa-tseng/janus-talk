@@ -1,15 +1,17 @@
-const { DomView, template, find, from } = require('janus');
+const { Varying, DomView, template, find, from, mutators } = require('janus');
 const stdlib = require('janus-stdlib');
 const $ = require('jquery');
 
-const { Slide, Section, Deck } = require('./model');
+const { Snippet, Slide, Section, Deck } = require('./model');
 const { highlight } = require('./extern/view/highlighter');
 
-const SlideView = DomView.build($(`
-<section class="slide">
-  <div class="slide-contents"/>
-  <div class="slide-name"/>
-</section>`), template(
+
+class SlideView extends DomView.build($(`
+  <section class="slide">
+    <div class="slide-contents"/>
+    <div class="slide-name"/>
+  </section>`
+), template(
   find('.slide')
     .prop('id', from('idx').map(idx => `slide-${idx}`))
     .classed('active', from.subject()
@@ -17,8 +19,31 @@ const SlideView = DomView.build($(`
       .all.map((slide, active) => slide === active))
     .css('transform', from.app('layout').and.subject().all.map((f, x) => f(x))),
 
-  find('.slide-contents').html(from('idx').map(idx => $(`#content #s${idx}`).html())), // lol :(
+  find('.slide-contents').html(from('contents')),
   find('.slide-name').text(from('name'))
+)) {
+  _render() {
+    const artifact = DomView.prototype._render.call(this);
+
+    for (const snippet of this.subject.get_('snippets').values_())
+      this._bindings.push(mutators.render(from(new Varying(snippet)))
+        (artifact.find(`#snippet-${snippet.get_('id')}`), this.pointer(), true));
+
+    for (const sample of this.subject.get_('samples'))
+      this._bindings.push(mutators.render(from(sample.get('result')).map(tap))
+        (artifact.find(sample.get_('target')), this.pointer(), true));
+
+    return artifact;
+  }
+}
+
+const SnippetView = DomView.build($(`
+<div class="snippet">
+  <div class="snippet-code"/>
+  <button class="snippet-revert">Revert</button>
+`), template(
+  find('.snippet-code').render(from.attribute('snippet')).criteria({ style: 'code' }),
+  find('.snippet-revert').on('click', (_, snippet) => { snippet.revert(); })
 ));
 
 const SectionView = DomView.build(
@@ -98,11 +123,13 @@ class DeckView extends DomView.build($(`
   }
 }
 
+
 module.exports = {
-  SlideView, DeckView,
+  DeckView,
   registerWith(library) {
-    library.register(Slide, SlideView);
     library.register(Section, SectionView);
+    library.register(Snippet, SnippetView);
+    library.register(Slide, SlideView);
     library.register(Deck, DeckView);
   }
 };

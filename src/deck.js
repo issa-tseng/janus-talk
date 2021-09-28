@@ -3,14 +3,18 @@ const $ = window.$ = require('jquery');
 window.tap = (x) => { console.log(x); return x; };
 window.scrollTo(0, 0);
 
-const { Deck, Slide } = require('./model');
+const { Deck, Slide, Snippet } = require('./model');
 const deck = Deck.deserialize({ sections: [{
   name: 'Introduction',
   slides: [
     { name: 'Title' },
     { name: 'Three Glimpses and an Apology' },
     { name: 'Exports' },
-    { name: 'Tasks Example' },
+    { name: 'Tasks Example',
+      samples: [{
+        pick: [ 'tasks-model', 'tasks-view', 'tasks-main' ],
+        target: '#tasks'
+      }] },
     { name: 'Drag and Drop' }
   ]
 }, {
@@ -32,8 +36,22 @@ require('./extern/view/placeholder').registerWith(deck.views);
 require('./extern/view/repl').registerWith(deck.views);
 require('./extern/view/sheet').registerWith(deck.views);
 require('./extern/view/valuator').registerWith(deck.views);
+require('./extern/view/view').registerWith(deck.views);
 require('./extern/view/xray').registerWith(deck.views);
 require('./view').registerWith(deck.views);
+
+for (const slide of deck.get_('slides')) {
+  const contents = $(`#content #s${slide.idx}`).detach();
+  const snippets = slide.get_('snippets');
+  for (const sample of slide.get_('samples')) sample.set('snippets', snippets);
+  contents.find('pre').each(function() {
+    const $this = $(this);
+    const id = $this.prop('id');
+    snippets.set(id, new Snippet({ id, snippet: $this.find('code').text() }));
+    $this.replaceWith(`<div id="snippet-${id}"/>`);
+  });
+  slide.set('contents', contents.html());
+}
 
 const deckView = deck.view(deck);
 $('main').append(deckView.artifact());

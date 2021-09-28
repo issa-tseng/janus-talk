@@ -1,4 +1,4 @@
-const { Model, attribute, initial, bind, from, List, App } = require('janus');
+const { Map, Model, attribute, initial, bind, from, List, App } = require('janus');
 const { varying } = require('janus-stdlib');
 const { cheapGrid, Layout } = require('./layout');
 
@@ -6,12 +6,24 @@ const { Confirm } = require('./extern/view/confirm');
 const { Flyout, holdParent } = require('./extern/model/flyout');
 const { Placeholder } = require('./extern/view/placeholder');
 const { Repl } = require('./extern/model/repl');
+const { Samples } = require('./extern/model/sample');
 const { Sheet } = require('./extern/model/sheet');
 const { Valuator } = require('./extern/model/valuator');
 const { XRay } = require('./extern/model/xray');
 
 
-class Slide extends Model {}
+class Snippet extends Model.build(
+  attribute('snippet', attribute.Text),
+  attribute('collapsed', attribute.Boolean)
+) {
+  _initialize() { this.set('initial', this.get_('snippet')); }
+  revert() { this.set('snippet', this.get_('initial')); }
+}
+
+const Slide = Model.build(
+  attribute('samples', attribute.List.of(Samples).withInitial()),
+  initial('snippets', new Map())
+)
 const Slides = List.of(Slide);
 
 const Section = Model.build(
@@ -132,5 +144,5 @@ class Deck extends App.build(
   }
 }
 
-module.exports = { Slide, Section, Deck };
+module.exports = { Slide, Snippet, Section, Deck };
 

@@ -1,14 +1,3 @@
-// models
-
-const Task = Model.build(
-  attribute('name', attribute.Text),
-  attribute('done', attribute.Boolean)
-);
-
-class Checklist extends Model {}
-
-// views
-
 const TaskView = DomView.build($(`
 <div class="task">
   <span class="done"/>
@@ -34,14 +23,3 @@ const ChecklistView = DomView.build($(`
 
   find('button').on('click', (event, subject) => { subject.get_('tasks').add(new Task()); })
 ));
-
-// app setup
-
-const app = new App();
-stdlib.view.registerWith(app.views);
-app.views.register(Task, TaskView);
-app.views.register(Checklist, ChecklistView);
-const checklist = new Checklist({ tasks: new List() });
-
-return app.view(checklist);
-
