@@ -130,3 +130,294 @@
         &:hover button
           display: block
 
+#slide-4
+  h1
+    font-size: 3vw
+    padding-left: 6vw
+    padding-top: 75vh
+
+#slide-5
+  ul
+    font-size: 3vw
+    font-style: italic
+    padding-left: 8vw
+    padding-top: 58vh
+
+    li
+      padding-bottom: 2vh
+
+#slide-6, #slide-7
+  #snippet-pets, #snippet-pets2
+    left: 6vw
+    position: absolute
+    top: 16vh
+
+  .pets
+    font-size: 2em
+    left: 64vw
+    position: absolute
+    top: 20vh
+
+    > .janus-list > .janus-list
+      padding-bottom: 5vh
+      &:last-child
+        border-bottom: none
+
+    .pet
+      margin-bottom: 0.5em
+
+      .kind
+        margin-left: 1em
+        &:after
+          @include icon($icon-chevron-down)
+          position: relative
+          right: 1.3em
+          top: 0.2em
+
+    input, select
+      @include no-appearance
+      background: $color-overview-background
+      border-bottom: 1px dotted #fff
+      border-radius: 0
+      color: #fff
+      font-family: helvetica
+      font-size: 2vh
+      padding: 0.5em 0.8em
+
+    .janus-literal:after
+      content: ', '
+    .janus-literal:last-child:after
+      content: ''
+
+    .janus-inspect-entity
+      display: block
+      padding-bottom: 5vh
+
+#slide-8, #slide-9, #slide-10
+  .CodeMirror
+    font-size: 1.5vh
+
+  #snippet-payment
+    left: 4vw
+    position: absolute
+    top: 8vh
+    width: 43vw
+
+  #snippet-payment-payment
+    position: absolute
+    left: 47vw
+    top: 8vh
+
+    h3
+      display: none
+
+  #snippet-payment-post
+    display: none
+
+  .slide-contents > .payment
+    left: 4.3vw
+    position: absolute
+    top: 66vh
+
+    hr
+      border-top: 1px dotted #000
+      border-bottom: none
+      margin: 1em 0
+      width: 47em
+
+    label
+      display: block
+      + label
+        margin-left: 25vh
+        margin-top: -5.6vh
+        position: absolute
+
+    input[type=text], input[type=number], select
+      @include no-appearance
+      background: $color-overview-background
+      border-bottom: 1px dotted #fff
+      border-radius: 0
+      color: #fff
+      font-family: helvetica
+      font-size: 2vh
+      padding: 0.5em 0.8em
+
+    .networks
+      margin-left: 50vh
+      margin-top: -4.8vh
+      position: absolute
+      width: 7em
+
+      span
+        display: inline-block
+        filter: invert(1)
+        height: 2.5em
+        transition: opacity 0.2s
+        width: 3em
+      .visa
+        background: url(/assets/visa.png)
+      .mastercard
+        background: url(/assets/mastercard.png)
+
+      &.network-mastercard .visa
+        opacity: 0.2
+      &.network-visa .mastercard
+        opacity: 0.2
+
+    .fund
+      select
+        width: 12.1em
+      &:after
+        @include icon($icon-chevron-down)
+        font-size: 1.8em
+        position: relative
+        right: 1.3em
+        top: 0.2em
+
+    .billing-address + label
+      margin: 1em 0
+
+    .different-address
+      margin-right: 0.5em
+
+    .shipping-address
+      opacity: 0.4
+      pointer-events: none
+      transition: 0.2s opacity
+
+      &.active
+        opacity: 1
+        pointer-events: auto
+        transition: none
+
+#slide-9
+  #snippet-composition
+    left: 4vw
+    position: absolute
+    top: 8vh
+    width: 43vw
+
+  #snippet-composition-payment
+    position: absolute
+    left: 47vw
+    top: 8vh
+
+    h3
+      display: none
+
+  #snippet-composition-post
+    display: none
+
+#slide-9
+  #snippet-composition
+    left: 4vw
+    position: absolute
+    top: 8vh
+    width: 43vw
+
+  #snippet-composition-payment
+    position: absolute
+    left: 47vw
+    top: 8vh
+
+    h3
+      display: none
+
+  #snippet-composition-post
+    display: none
+
+#slide-10
+  #snippet-serialization-impl
+    display: none
+
+  #snippet-serialization
+    left: 4vw
+    position: absolute
+    top: 54vh
+
+#slide-11
+  #snippet-tabs
+    margin-left: 6vw
+    margin-top: 6vh
+    width: 96vh
+
+  #tabs
+    $bg: #eee
+    left: 70vw
+    position: absolute
+    top: 30vh
+    width: 26vw
+
+    .tabs .tab
+      display: inline-block
+      font-size: 1.6vh
+      padding: 0.4em 0.8em
+
+      &.checked
+        background: #eee
+        color: #000
+
+    button
+      position: absolute
+      right: 0
+      top: 0.6vh
+
+    .document
+      background: #eee
+
+      .name input
+        @include no-appearance
+        border-bottom: 1px dotted #000
+        font-size: 2vh
+        padding: 0.6em
+        width: calc(100% - 2.8vh)
+      .content textarea
+        @include no-appearance
+        font-size: 1.3vh
+        min-height: 15vh
+        padding: 1vh 1.3vh
+        width: calc(100% - 2.8vh)
+
+#slide-12
+  #snippet-dragdrop
+    margin-left: 6vw
+    margin-top: 11vh
+    .CodeMirror
+      height: auto
+    width: 50vw
+  #snippet-dragdrop-3
+    h3
+      display: none
+    margin-left: 6vw
+    margin-top: -2vh
+    width: 50vw
+    .CodeMirror
+      height: auto
+
+  #snippet-dragdrop-2, #snippet-dragdrop-4
+    display: none
+
+  #dragdrop
+    left: 60vw
+    position: absolute
+    top: 14vh
+    width: 35vw
+
+    > .janus-list > div
+      padding-bottom: 2vh
+
+    .workspace
+      border: 1px dotted #fff
+      height: 25vh
+      position: relative
+      width: 35vw
+
+    .box
+      background: $color-accent
+      border: 1px dotted #fff
+      height: 2em;
+      margin-left: -1em;
+      margin-top: -1em;
+      position: absolute;
+      width: 2em;
+

@@ -15,10 +15,34 @@ const deck = Deck.deserialize({ sections: [{
         pick: [ 'tasks-model', 'tasks-view', 'tasks-main' ],
         target: '#tasks'
       }] },
-    { name: 'Drag and Drop' }
+    { name: 'An Apology' }
   ]
 }, {
-  name: 'Primer',
+  name: 'Using Janus',
+  slides: [
+    { name: 'What Janus Is' },
+    { name: 'Pets',
+      samples: [{ pick: [ 'pets' ], target: '.pets' }] },
+    { name: 'Pets + Kinds',
+      samples: [{ pick: [ 'pets2' ], target: '.pets' }] },
+    { name: 'Payment Processing',
+      samples: [{ pick: [ 'payment', 'payment-payment', 'payment-post' ], target: '.payment' }] },
+    { name: 'Payments Refactored',
+      samples: [{ pick: [ 'composition', 'composition-payment', 'composition-post' ], target: '.payment' }] },
+    { name: 'Payments Serialized',
+      samples: [{ pick: [ 'serialization-impl', 'serialization' ], target: '.payment' }] },
+    { name: 'Tabs',
+      samples: [{ pick: [ 'tabs' ], target: '#tabs' }] },
+    { name: 'Drag and Drop',
+      samples: [{ pick: [ 'dragdrop', 'dragdrop-2', 'dragdrop-3', 'dragdrop-4' ], target: '#dragdrop' }] }
+  ]
+}, {
+  name: 'Internals',
+  slides: [
+    { name: 'Abc' }
+  ]
+}, {
+  name: 'Directions',
   slides: [
     { name: 'Abc' }
   ]
@@ -29,6 +53,7 @@ const inspect = require('janus-inspect');
 stdlib.view($).registerWith(deck.views);
 inspect.view($).registerWith(deck.views);
 require('./extern/view/confirm').registerWith(deck.views);
+require('./extern/view/context').registerWith(deck.views);
 require('./extern/view/editor').registerWith(deck.views);
 require('./extern/view/exception').registerWith(deck.views);
 require('./extern/view/flyout').registerWith(deck.views);
