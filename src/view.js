@@ -95,13 +95,11 @@ class DeckView extends DomView.build($(`
     $window.on('keydown', (event) => {
       if ($(event.target).closest('input,textarea').length > 0) return;
 
-      if (event.which === 37) deck.previous();
-      else if (event.which === 39) deck.advance();
+      const prevent = () => { event.preventDefault(); };
+      if (event.which === 37) prevent(deck.previous());
+      else if (event.which === 39) prevent(deck.advance());
       else if (event.which === 192) deck.toggleConsole();
-      else if (event.which === 9) {
-        event.preventDefault();
-        deck.toggleOverview();
-      }
+      else if (event.which === 9) prevent(deck.toggleOverview());
     });
 
     // resize events
