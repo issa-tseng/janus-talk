@@ -1,7 +1,6 @@
 const Address = Model.build(
   attribute('street', attribute.Text),
-  attribute('city', attribute.Text),
-  attribute('country', attribute.Text)
+  attribute('city', attribute.Text)
 );
 
 const Payment = Model.build(

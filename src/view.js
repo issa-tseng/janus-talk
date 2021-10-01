@@ -40,7 +40,16 @@ class SlideView extends DomView.build($(`
     .css('transform', from.app('layout').and.subject().all.map((f, x) => f(x))),
 
   find('.slide-contents').html(from('contents')),
-  find('.slide-name').text(from('name'))
+  find('.slide-name').text(from('name')),
+
+  find('.slide').on('click', (event, slide, view) => {
+    const deck = view.closest_(Deck).subject;
+    if (deck.get_('overview') !== true) return;
+
+    event.preventDefault();
+    deck.set('active-idx', slide.get_('idx'));
+    deck.set('overview', false);
+  })
 )) {
   _render() {
     const artifact = DomView.prototype._render.call(this);
@@ -94,12 +103,14 @@ class DeckView extends DomView.build($(`
     // keypress events
     $window.on('keydown', (event) => {
       if ($(event.target).closest('input,textarea').length > 0) return;
+      console.log(event.which);
 
       const prevent = () => { event.preventDefault(); };
       if (event.which === 37) prevent(deck.previous());
       else if (event.which === 39) prevent(deck.advance());
       else if (event.which === 192) deck.toggleConsole();
-      else if (event.which === 9) prevent(deck.toggleOverview());
+      else if ((event.which === 220) && (deck.get_('xray') == null))
+        prevent(deck.toggleOverview());
     });
 
     // resize events
@@ -132,6 +143,12 @@ class DeckView extends DomView.build($(`
       if (node.parents('.varying-tree').length === 2) return; // is the root node in the panel.
       const timer = setTimeout(_ => { deck.flyout(node, node.view().subject, { context: 'panel' }); }, 300);
       node.one('mouseleave', _ => { clearTimeout(timer); });
+    });
+
+    dom.on('click', '.janus-inspect-pin', (event) => {
+      const target = $(event.target).closest('.janus-inspect-panel').view().subject;
+      deck.get_('repl').reference(target.get_('target'));
+      app.showRepl();
     });
   }
 }

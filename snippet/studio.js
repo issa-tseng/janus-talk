@@ -1,0 +1,2 @@
+return inspect.panel(deck);
+

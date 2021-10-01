@@ -4,7 +4,7 @@ window.tap = (x) => { console.log(x); return x; };
 window.scrollTo(0, 0);
 
 const { Deck, Slide, Snippet } = require('./model');
-const deck = Deck.deserialize({ sections: [{
+const deck = window.deck = Deck.deserialize({ sections: [{
   name: 'Introduction',
   slides: [
     { name: 'Title' },
@@ -22,29 +22,44 @@ const deck = Deck.deserialize({ sections: [{
   slides: [
     { name: 'What Janus Is' },
     { name: 'Pets',
-      samples: [{ pick: [ 'pets' ], target: '.pets' }] },
-    { name: 'Pets + Kinds',
       samples: [{ pick: [ 'pets2' ], target: '.pets' }] },
-    { name: 'Payment Processing',
+    { name: 'Payment processing',
       samples: [{ pick: [ 'payment', 'payment-payment', 'payment-post' ], target: '.payment' }] },
-    { name: 'Payments Refactored',
+    { name: 'Payments refactored',
       samples: [{ pick: [ 'composition', 'composition-payment', 'composition-post' ], target: '.payment' }] },
-    { name: 'Payments Serialized',
-      samples: [{ pick: [ 'serialization-impl', 'serialization' ], target: '.payment' }] },
     { name: 'Tabs',
       samples: [{ pick: [ 'tabs' ], target: '#tabs' }] },
     { name: 'Drag and Drop',
-      samples: [{ pick: [ 'dragdrop', 'dragdrop-2', 'dragdrop-3', 'dragdrop-4' ], target: '#dragdrop' }] }
+      samples: [{ pick: [ 'dragdrop', 'dragdrop-2', 'dragdrop-3', 'dragdrop-4' ], target: '#dragdrop' }] },
+    { name: 'Flyouts',
+      samples: [{ pick: [ 'flyouts', 'flyouts-impl' ], target: '#flyouts' }] }
   ]
 }, {
   name: 'Internals',
   slides: [
-    { name: 'Abc' }
+    { name: 'Internals' },
+    { name: 'Janus is Small' },
+    { name: 'from chains',
+      samples: [{ pick: [ 'from' ], target: '#from-1' }] },
+    { name: 'pointing',
+      samples: [
+        { pick: [ 'point' ], target: '#point-1' },
+        { pick: [ 'point-2' ], target: '#point-2' }] },
+    { name: 'Mutators' },
+    { name: 'Is it fast?' },
+    { name: 'Derived data structures' }
   ]
 }, {
   name: 'Directions',
   slides: [
-    { name: 'Abc' }
+    { name: 'Next tasks' },
+    { name: 'Janus Studio',
+      samples: [{ pick: [ 'studio' ], target: '#studio' }] },
+    { name: 'Learn More' },
+    { name: 'ODK' },
+    { name: 'What is Janus?' },
+    { name: 'Vision' },
+    { name: 'Thank you' }
   ]
 }] });
 
@@ -91,5 +106,6 @@ htmlClass('console'); htmlClass('overview');
 $(() => { setTimeout(() => { // a collection of bad hacks.
   document.activeElement.blur();
   $('html, body').scrollLeft(0).scrollTop(0);
+  $('body').on('scroll', () => { $('body').scrollLeft(0).scrollTop(0); });
 }), 100 });
 

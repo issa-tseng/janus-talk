@@ -146,7 +146,7 @@
     li
       padding-bottom: 2vh
 
-#slide-6, #slide-7
+#slide-6
   #snippet-pets, #snippet-pets2
     left: 6vw
     position: absolute
@@ -193,7 +193,7 @@
       display: block
       padding-bottom: 5vh
 
-#slide-8, #slide-9, #slide-10
+#slide-7, #slide-8
   .CodeMirror
     font-size: 1.5vh
 
@@ -290,7 +290,7 @@
         pointer-events: auto
         transition: none
 
-#slide-9
+#slide-8
   #snippet-composition
     left: 4vw
     position: absolute
@@ -308,38 +308,41 @@
   #snippet-composition-post
     display: none
 
-#slide-9
-  #snippet-composition
-    left: 4vw
+  .cover
+    background: $color-background
+    opacity: 0.7
+    pointer-events: none
     position: absolute
+    z-index: 2
+  .cover-1
+    height: 50vh
+    left: 4vw
     top: 8vh
     width: 43vw
-
-  #snippet-composition-payment
-    position: absolute
+  .cover-2
+    height: 29vh
     left: 47vw
     top: 8vh
+    width: 53vw
+  .cover-3
+    height: 27vh
+    left: 47vw
+    top: 40vh
+    width: 53vw
+  .cover-4
+    height: 20vh
+    left: 47vw
+    top: 71vh
+    width: 53vw
 
-    h3
-      display: none
-
-  #snippet-composition-post
-    display: none
-
-#slide-10
-  #snippet-serialization-impl
-    display: none
-
-  #snippet-serialization
-    left: 4vw
-    position: absolute
-    top: 54vh
-
-#slide-11
+#slide-9
   #snippet-tabs
     margin-left: 6vw
     margin-top: 6vh
     width: 96vh
+
+    .CodeMirror
+      font-size: 1.5vh
 
   #tabs
     $bg: #eee
@@ -378,7 +381,7 @@
         padding: 1vh 1.3vh
         width: calc(100% - 2.8vh)
 
-#slide-12
+#slide-10
   #snippet-dragdrop
     margin-left: 6vw
     margin-top: 11vh
@@ -416,8 +419,172 @@
       background: $color-accent
       border: 1px dotted #fff
       height: 2em;
-      margin-left: -1em;
-      margin-top: -1em;
-      position: absolute;
-      width: 2em;
+      margin-left: -1em
+      margin-top: -1em
+      position: absolute
+      width: 2em
+
+#slide-11
+  .CodeMirror
+    font-size: 1.4vh
+
+  #snippet-flyouts
+    left: 3vw
+    position: absolute
+    top: 13vh
+    width: 49vw
+
+  #snippet-flyouts-impl
+    left: 54vw
+    position: absolute
+    top: 13vh
+    h3
+      display: none
+
+  #flyouts
+    left: 0
+    position: absolute
+    top: 0
+
+    .content
+      left: 54.3vw
+      position: absolute
+      top: 70vh
+
+    .person
+      background: #fff
+      border: 1px dotted #fff
+      color: $color-overview-background
+      padding: 1vh
+      min-width: 20vw
+
+    .flyout
+      box-shadow: $subtle-shadow
+      position: absolute
+
+#slide-12
+  h1
+    font-size: 3vw
+    padding-left: 6vw
+    padding-top: 75vh
+
+#slide-13
+  #locs
+    font-family: $font-monospace
+    font-size: 1.4vh
+    margin: 8vh auto
+
+    td + td
+      color: $color-accent
+      text-align: right
+      width: 5em
+
+    tr:last-child
+      border-top: 1px dotted #fff
+      color: $color-accent
+
+#slide-14
+  .CodeMirror
+    font-size: 2.4vh
+  #snippet-from
+    margin-left: 6vw
+    margin-top: 20vh
+  #from-1
+    margin-left: 6vw
+    width: 25vw
+
+#slide-15
+  .CodeMirror
+    font-size: 2.4vh
+  #snippet-point
+    margin-left: 6vw
+    margin-top: 4vh
+  #point-1, #point-2
+    margin-left: 6vw
+    width: 25vw
+  #snippet-point-2
+    margin-left: 6vw
+    margin-top: 5vh
+    h3
+      display: none
+
+#slide-16
+  .CodeMirror
+    font-size: 2.4vh
+  #snippet-mutator
+    margin-left: 6vw
+    margin-top: 20vh
+
+#slide-17
+  h1
+    font-size: 3vw
+    padding-left: 6vw
+    padding-top: 75vh
+
+#slide-18
+  .CodeMirror
+    font-size: 2.4vh
+  #snippet-derived
+    margin-left: 6vw
+    margin-top: 70vh
+
+#slide-19
+  h1
+    font-size: 3vw
+    padding-left: 6vw
+    padding-top: 75vh
+
+#slide-20
+  #snippet-studio
+    display: none
+  #studio
+    bottom: 28vh
+    left: 6vw
+    position: absolute
+    width: 35vw
+
+  h1
+    font-size: 3vw
+    padding-left: 6vw
+    padding-top: 75vh
+
+#slide-21
+  h1
+    font-size: 3vw
+    padding-left: 6vw
+    padding-top: 75vh
+    a
+      color: #fff
+      font-style: italic
+
+#slide-22
+  h1
+    font-size: 3vw
+    padding-left: 6vw
+    padding-top: 75vh
+    a
+      color: #fff
+      font-style: italic
+
+#slide-23
+  h1
+    font-size: 3vw
+    padding-left: 6vw
+    padding-top: 75vh
+
+#slide-24
+  ul
+    font-size: 3vw
+    font-style: italic
+    padding-left: 8vw
+    padding-top: 58vh
+
+    li
+      padding-bottom: 2vh
+
+#slide-25
+  h1
+    font-size: 3vw
+    padding-left: 6vw
+    padding-top: 75vh
 

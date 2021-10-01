@@ -108,6 +108,7 @@ h1, h2, h3, h4, h5, h6
 // BASIC
 
 #sections h2
+  color: $color-accent
   font-size: 10vh
   position: absolute
   transform-origin: top left
@@ -127,7 +128,7 @@ section
   .overview &
     border: 2px solid rgba(255, 255, 255, 0.13)
 
-    &.active
+    &.active, &:hover
       box-shadow: 0 0 0 15px $color-accent
 
   .slide-name
